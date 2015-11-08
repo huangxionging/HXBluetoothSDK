@@ -7,8 +7,12 @@
 //
 
 #import "ViewController.h"
+#import "HXBaseController.h"
+#import "HXBaseClient.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    HXBaseController *controller;
+}
 
 @end
 
@@ -17,6 +21,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+       
+    controller = [[HXBaseController alloc] init];
+    
+    HXBaseClient *baseClient = [HXBaseClient shareBaseClient];
+    
+    [baseClient addPeripheralScanService: nil];
+    
+    [controller startWorkWithBaseClient: baseClient];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
