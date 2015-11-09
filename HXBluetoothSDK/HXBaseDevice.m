@@ -9,28 +9,38 @@
 #import "HXBaseDevice.h"
 #import "HXBaseClient.h"
 
-typedef void(^updateDataFailureBlock)(NSError *error);
+typedef void(^updateDataBlock)(HXBaseActionDataModel *data);
+typedef void(^writeDataBlock)(HXBaseActionDataModel *data);
 
-typedef void(^updateDataSucessBlock)(NSData *data);
-
-typedef void(^writeDataFailureBlock)(NSError *error);
-
-typedef void(^writeDataSuccessBlock)(NSData *data);
-
-@interface HXBaseDevice ()<CBPeripheralDelegate> {
+@interface HXBaseDevice () {
     
     // 更新成功的回调
-    updateDataSucessBlock _updateSuccess;
-    
-    // 更新失败的回调
-    updateDataFailureBlock _updateFailure;
+    updateDataBlock _updateDataBlock;
     
     // 写成功的回调
-    writeDataSuccessBlock _writeSuccess;
+    writeDataBlock _writeDataBlock;
     
-    // 写失败的回调
-    writeDataFailureBlock _writeFailure;
+    /**
+     *  外设.
+     */
+    CBPeripheral *_peripheral;
+    
+    /**
+     *  服务 UUID 构成的字典
+     */
+    NSMutableDictionary<NSString *, CBUUID *> *_serviceUUIDs;
+    
+    /**
+     *  特征 UUID构成的字典
+     */
+    NSMutableDictionary<NSString *, CBUUID *> *_characteristicUUIDs;
+    
+    /**
+     * 特征字典
+     */
+    NSMutableDictionary<NSString *, CBCharacteristic *> *_chracteristics;
 }
+
 
 @end
 
@@ -46,24 +56,67 @@ typedef void(^writeDataSuccessBlock)(NSData *data);
     return self;
 }
 
-- (instancetype)initWithPeriheral:(CBPeripheral *)peripheral {
-    self = [super init];
+- (void)addServiceWithUUIDString:(NSString *)serviceUUIDString {
     
-    if (self) {
-        self.peripheral = peripheral;
-        self.peripheral.delegate = self;
+    if (self->_serviceUUIDs == nil) {
+        self->_serviceUUIDs = [[NSMutableDictionary alloc] init];
     }
     
-    return self;
+    [self->_serviceUUIDs setObject: [CBUUID UUIDWithString: serviceUUIDString] forKey: serviceUUIDString];
+    
+//    if (![[self->_serviceUUIDs allKeys] containsObject: serviceUUIDString]) {
+//        
+//    }
 }
 
-- (void)setUpdateDataSuccessBlock:(void (^)(NSData *))upadateDataSuccessBlock andUpdateDataFailureBlock:(void (^)(NSError *))updateDataFailureBlock {
-    _updateSuccess = 
+- (void)addCharacteristicWithUUIDString:(NSString *)characteristicUUIDString {
+    if (self->_characteristicUUIDs == nil) {
+        self->_characteristicUUIDs = [[NSMutableDictionary alloc] init];
+    }
+    
+    // 设置特征
+    [self->_characteristicUUIDs setObject: [CBUUID UUIDWithString: characteristicUUIDString] forKey: characteristicUUIDString];
+}
+
+-(void)startWorkWith:(HXBasePeripheralModel *)peripheralModel{
+    self->_peripheral = peripheralModel.peripheral;
+    self->_peripheral.delegate = self;
+    [self->_peripheral discoverServices: self->_characteristicUUIDs.allValues];
+}
+
+
+- (void)sendActionWithModel:(HXBaseActionDataModel *)actionDataModel {
+    
+}
+
+- (void)setUpdateDataBlock:(void (^)(HXBaseActionDataModel *))upadateDataBlock {
+    self->_updateDataBlock = upadateDataBlock;
+}
+
+- (void)setWriteDataBlock:(void (^)(HXBaseActionDataModel *))writeDataBlock {
+    self->_writeDataBlock = writeDataBlock;
 }
 
 #pragma mark---CBPeripheralDelegate
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
     
+    for (CBCharacteristic *characteristic in service.characteristics) {
+        
+        if (self->_chracteristics == nil) {
+            self->_chracteristics = [[NSMutableDictionary alloc] init];
+        }
+        
+        NSLog(@"%@", characteristic);
+        
+        if (characteristic.properties == CBCharacteristicPropertyRead) {
+            [peripheral readValueForCharacteristic: characteristic];
+            [peripheral setNotifyValue: YES forCharacteristic: characteristic];
+        }
+        
+        
+        // 所有 UUID 构成的服务
+        [self->_chracteristics setObject: characteristic forKey: characteristic.UUID.UUIDString];
+    }
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
@@ -76,6 +129,13 @@ typedef void(^writeDataSuccessBlock)(NSData *data);
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
     
+    if (error) {
+        return;
+    }
+    
+    for (CBService *service in peripheral.services) {
+        [peripheral discoverCharacteristics: self->_characteristicUUIDs.allValues forService: service];
+    }
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices {
@@ -92,28 +152,17 @@ typedef void(^writeDataSuccessBlock)(NSData *data);
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     
-    if (error) {
-        
-        if (self->_updateFailure) {
-            self->_updateFailure(error);
-        }
-        else {
 #ifdef HXLOG_FLAG
-            HXDEBUG;
-            exit(0);
+    HXDEBUG;
 #endif
-        }
-        return;
-    }
     
-    if (self->_updateSuccess) {
-        self->_updateSuccess(characteristic.value);
-    }
-    else {
-#ifdef HXLOG_FLAG
-        HXDEBUG;
-        exit(0);
-#endif
+    if (self->_updateDataBlock) {
+        HXBaseActionDataModel *actionDataModel = [[HXBaseActionDataModel alloc] init];
+        actionDataModel.actionData = characteristic.value;
+        actionDataModel.characteristicString = characteristic.UUID.UUIDString;
+        actionDataModel.error = error;
+        actionDataModel.actionDatatype = kBaseActionDataTypeAnwser;
+        self->_updateDataBlock(actionDataModel);
     }
     
 }
@@ -123,31 +172,18 @@ typedef void(^writeDataSuccessBlock)(NSData *data);
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    
-    if (error) {
-        
-        if (self->_writeFailure) {
-            self->_writeFailure(error);
-        }
-        else {
 #ifdef HXLOG_FLAG
-            HXDEBUG;
-            exit(0);
+    HXDEBUG;
 #endif
-        }
-        return;
-    }
     
-    if (self->_writeSuccess) {
-        self->_writeSuccess(characteristic.value);
+    if (self->_writeDataBlock) {
+        HXBaseActionDataModel *actionDataModel = [[HXBaseActionDataModel alloc] init];
+        actionDataModel.actionData = characteristic.value;
+        actionDataModel.characteristicString = characteristic.UUID.UUIDString;
+        actionDataModel.error = error;
+        actionDataModel.actionDatatype = kBaseActionDataTypeAnwser;
+        self->_writeDataBlock(actionDataModel);
     }
-    else {
-#ifdef HXLOG_FLAG
-        HXDEBUG;
-        exit(0);
-#endif
-    }
-    
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {

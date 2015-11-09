@@ -7,33 +7,45 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "HXBaseActionDataModel.h"
+#import "HXBasePeripheralModel.h"
 
-@class CBPeripheral;
-
-@interface HXBaseDevice : NSObject
+@interface HXBaseDevice : NSObject <CBPeripheralDelegate>
 
 /**
- *  外设.
+ *  添加服务
  */
-@property (nonatomic, strong) CBPeripheral *peripheral;
+- (void) addServiceWithUUIDString: (NSString *)serviceUUIDString;
 
-// 
-- (instancetype) initWithPeriheral: (CBPeripheral *) peripheral;
+- (void) addCharacteristicWithUUIDString: (NSString *)characteristicUUIDString;
 
-- (void) start;
+/**
+ *  @brief  通过外设开始工作
+ *  @param  peripheral 是外设
+ *  @return void
+ */
+- (void) startWorkWith: (HXBasePeripheralModel *)peripheralModel;
+
+/**
+ *  @brief  发送命令
+ *  @param  actionDataModel 是操作的数据模型
+ *  @return void
+ */
+- (void) sendActionWithModel:(HXBaseActionDataModel *) actionDataModel;
 
 /**
  *  @brief  设置更新回调, 主要用于接收外设发回的数据, 每次接收一个短包
- *  @param  upadateDataSuccessBlock 更新成功回调, updateDataFailureBlock 更新失败回调
+ *  @param  upadateDataBlock 更新数据回调
  *  @return void
  */
-- (void) setUpdateDataSuccessBlock: (void(^)(NSData *data)) upadateDataSuccessBlock andUpdateDataFailureBlock: (void(^)(NSError *error)) updateDataFailureBlock;
+- (void) setUpdateDataBlock: (void(^)(HXBaseActionDataModel *actionDataModel)) upadateDataBlock;
 
 /**
  *  @brief  设置写回调, 主要是发送命令数据
- *  @param  writeDataSuccessBlock 写回调, writeDataFailure 是写失败回调
+ *  @param  writeDataBlock 写回调
  *  @return void
  */
-- (void) setWriteDataSuccessBlock: (void(^)(NSData *data)) writeDataSuccessBlock andWriteDataFailureBlock: (void(^)(NSError *error)) writeDataFailure;
+- (void) setWriteDataBlock: (void(^)(HXBaseActionDataModel *actionDataModel)) writeDataBlock;
 
 @end

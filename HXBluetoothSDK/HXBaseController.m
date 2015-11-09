@@ -11,6 +11,22 @@
 #import "HXBaseDevice.h"
 #import "HXBaseAction.h"
 
+@interface HXBaseController ()
+
+@property (nonatomic, weak) HXBaseAction *baseAction;
+
+/**
+ *  基础连接, 负责查找外设
+ */
+@property (nonatomic, strong) HXBaseClient *baseClient;
+
+/**
+ *  基础设备, 负责管理数据
+ */
+@property (nonatomic, strong) HXBaseDevice *baseDevice;
+
+@end
+
 @implementation HXBaseController
 
 + (instancetype) shareBaseController {
@@ -25,28 +41,24 @@
 }
 
 #pragma mark---开始工作
-- (void)startWorkWithClient:(HXBaseClient *)baseClient {
+- (void)startWorkWithClient:(HXBaseClient *)baseClient{
     
-    if (baseClient == nil) {
 #ifdef HXLOG_FLAG
-        HXDEBUG;
-        NSLog(@"baseClient 不能为空");
-        exit(0);
+    HXDEBUG;
 #endif
-    }
     
     self.baseClient = baseClient;
     
     __weak HXBaseController *weakSelf = self;
     
     // 申请权限保护
-    //        [client applyAuthorityProtectionForInstance: self];
+    [baseClient lockWithOwner: weakSelf];
     
     // 设置超时时间
     [weakSelf.baseClient setScanTimeOut: 15.0];
     
     // 设置扫描准备回调
-    [weakSelf.baseClient setScanReadyBlock:^(NSInteger ready) {
+    [weakSelf.baseClient setScanReadyBlock:^(CBCentralManagerState ready) {
         
         // 根据状态做不同操作
         switch (ready) {
@@ -88,14 +100,13 @@
     
     
     
-    [weakSelf.baseClient setSearchedPeripheralBlock:^(CBPeripheral *peripheral) {
-        
+    [weakSelf.baseClient setSearchedPeripheralBlock:^(HXBasePeripheralModel *peripheral) {
         
         if (peripheral != nil) {
             
             //
             [weakSelf.baseClient stopScan];
-            weakSelf.baseDevice = [[HXBaseDevice alloc] initWithPeriheral: peripheral];
+            [weakSelf.baseClient connectPeripheralWithOptions: nil];
 #ifdef HXLOG_FLAG
             HXDEBUG;
             NSLog(@"发现外设: %@ ====>", peripheral);
@@ -105,7 +116,31 @@
             [weakSelf.baseClient startScanPeripheralWithOptions: nil];
         }
     }];
+    
+    [weakSelf.baseClient setConnectionPeripheralBlock:^(HXBasePeripheralModel *peripheral) {
+        [weakSelf.baseDevice startWorkWith: peripheral];
+    }];
 }
+
+- (void) setBaseDevice:(HXBaseDevice *)baseDevice {
+    self->_baseDevice = baseDevice;
+}
+
+- (void)sendAction:(HXBaseAction *)baseAction {
+    
+    __weak HXBaseController *weakSelf = self;
+    
+    [weakSelf.baseDevice sendActionWithModel: [baseAction modelForAction]];
+    
+    [weakSelf.baseDevice setUpdateDataBlock:^(HXBaseActionDataModel *actionDataModel) {
+        [baseAction receiveUpdateData: actionDataModel];
+    }];
+    
+    [weakSelf.baseDevice setWriteDataBlock:^(HXBaseActionDataModel *actionDataModel) {
+        [baseAction receiveUpdateData: actionDataModel];
+    }];
+}
+
 
 #pragma mark-
 

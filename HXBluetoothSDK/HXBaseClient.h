@@ -8,23 +8,29 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "HXBasePeripheralModel.h"
 
 
 /**
  *  负责蓝牙的基础连接, 外设扫描, 数据传输, 无需考虑可靠性问题.
  */
-@interface HXBaseClient : NSObject
+@interface HXBaseClient : NSObject<CBCentralManagerDelegate>
 
 + (instancetype) shareBaseClient;
 
 /**
- *  @brief  申请权限保护, 若申请成功, 则 objc 实例与该类本身的单例绑定, 其他实例无法使用该单例, 除非 objc 解除权限保护
- *  @param  objc 是需要申请权限保护的对象
- *  @return 返回权限保护成功或者失败
+ *  @brief  锁定权限, 主要用于设置回调的时候
+ *  @param  objc 是锁定者
+ *  @return 返回锁定成功或失败
  */
-- (BOOL) applyAuthorityProtectionForInstance: (id) objc;
+- (BOOL) lockWithOwner: (id) objc;
 
-- (void) unlockWithOnwner
+/**
+ *  @brief  解除锁定权限, 主要用于设置回调的时候
+ *  @param  objc 是锁定者, 需要解除锁定, 方便其他实例操作
+ *  @return 返回解除锁定成功或者失败
+ */
+- (BOOL) unlockWithOwner: (id) objc;
 
 /**
  *  @brief  添加待扫描外设的服务的 UUID
@@ -69,7 +75,14 @@
  *  @param  searchedPeripheralBlock 是查找最佳匹配的外设的操作, 回调会通知上层找到最佳外设
  *  @return void
  */
-- (void) setSearchedPeripheralBlock: (void(^)(CBPeripheral *peripheral)) searchedPeripheralBlock;
+- (void) setSearchedPeripheralBlock: (void(^)(HXBasePeripheralModel *peripheral)) searchedPeripheralBlock;
+
+/**
+ *  @brief  已链接外设回调
+ *  @param  connectionPeripheralBlock是连接外设回调
+ *  @return void
+ */
+- (void) setConnectionPeripheralBlock: (void(^)(HXBasePeripheralModel *peripheral)) connectionPeripheralBlock;
 
 
 /**

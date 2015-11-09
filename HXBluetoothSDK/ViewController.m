@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "HXBaseController.h"
 #import "HXBaseClient.h"
+#import "HXBaseDevice.h"
 
 @interface ViewController () {
     HXBaseController *controller;
@@ -25,11 +26,11 @@
     controller = [[HXBaseController alloc] init];
     
     HXBaseClient *baseClient = [HXBaseClient shareBaseClient];
-    
-    [baseClient addPeripheralScanService: nil];
-    
-    [controller startWorkWithBaseClient: baseClient];
-    
+    HXBaseDevice *baseDevice = [[HXBaseDevice alloc] init];
+
+    [controller setBaseDevice: baseDevice];
+    [controller startWorkWithClient: baseClient];
+
     
 }
 
