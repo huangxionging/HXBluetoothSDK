@@ -13,31 +13,18 @@
 
 @interface HXBaseController ()
 
-@property (nonatomic, weak) HXBaseAction *baseAction;
-
-/**
- *  基础连接, 负责查找外设
- */
-@property (nonatomic, strong) HXBaseClient *baseClient;
-
-/**
- *  基础设备, 负责管理数据
- */
-@property (nonatomic, strong) HXBaseDevice *baseDevice;
-
 @end
 
 @implementation HXBaseController
 
-+ (instancetype) shareBaseController {
+- (instancetype)init {
+    self = [super init];
     
-    HXBaseController *baseController = [[HXBaseController alloc] init];
-    
-    if (baseController) {
+    if (self) {
         
     }
     
-    return baseController;
+    return self;
 }
 
 #pragma mark---开始工作
@@ -47,12 +34,8 @@
     HXDEBUG;
 #endif
     
-    self.baseClient = baseClient;
-    
+    self->_baseClient = baseClient;
     __weak HXBaseController *weakSelf = self;
-    
-    // 申请权限保护
-    [baseClient lockWithOwner: weakSelf];
     
     // 设置超时时间
     [weakSelf.baseClient setScanTimeOut: 15.0];
@@ -98,13 +81,10 @@
         }
     }];
     
-    
-    
+    // 设置已找到外设回调
     [weakSelf.baseClient setSearchedPeripheralBlock:^(HXBasePeripheralModel *peripheral) {
         
         if (peripheral != nil) {
-            
-            //
             [weakSelf.baseClient stopScan];
             [weakSelf.baseClient connectPeripheralWithOptions: nil];
 #ifdef HXLOG_FLAG
@@ -117,31 +97,42 @@
         }
     }];
     
+    // 已连接回调
     [weakSelf.baseClient setConnectionPeripheralBlock:^(HXBasePeripheralModel *peripheral) {
-        [weakSelf.baseDevice startWorkWith: peripheral];
+        
+        if (peripheral.error == nil) {
+            [weakSelf deviceStartWorkWith: peripheral];
+        }
+        else {
+            NSLog(@"断开链接");
+            [weakSelf.baseClient connectPeripheralWithOptions: nil];
+        }
+        
     }];
 }
 
-- (void) setBaseDevice:(HXBaseDevice *)baseDevice {
-    self->_baseDevice = baseDevice;
+#pragma mark---设备开始工作
+- (void) deviceStartWorkWith: (HXBasePeripheralModel *) peripheralModel {
+    [self.baseDevice startWorkWith: peripheralModel];
 }
 
+#pragma mark---发送操作
 - (void)sendAction:(HXBaseAction *)baseAction {
     
     __weak HXBaseController *weakSelf = self;
     
-    [weakSelf.baseDevice sendActionWithModel: [baseAction modelForAction]];
+    // 发送数据
+    [weakSelf.baseDevice sendActionWithModel: [HXBaseActionDataModel modelWithAction: baseAction]];
     
+    // 更新数据回调
     [weakSelf.baseDevice setUpdateDataBlock:^(HXBaseActionDataModel *actionDataModel) {
         [baseAction receiveUpdateData: actionDataModel];
     }];
     
+    // 写数据回调
     [weakSelf.baseDevice setWriteDataBlock:^(HXBaseActionDataModel *actionDataModel) {
         [baseAction receiveUpdateData: actionDataModel];
     }];
 }
-
-
-#pragma mark-
 
 @end

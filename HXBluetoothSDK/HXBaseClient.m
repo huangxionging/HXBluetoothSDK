@@ -51,11 +51,6 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
 
 @implementation HXBaseClient {
     /**
-     *  权限保护使用
-     */
-    id _objc;
-    
-    /**
      *  可以开始扫描的回调
      */
     scanReadyBlock _scanReadyBlock;
@@ -91,37 +86,11 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
     
     self = [super init];
     
-    if (self->_objc != nil) {
-        return nil;
-    }
-    else {
-        return self;
-    }
-}
-
-- (BOOL) lockWithOwner:(id)objc {
-    
-    if (self->_objc == nil) {
-        self->_objc = objc;
-        return YES;
-    }
-    else {
-        return NO;
-    }
-}
-
-- (BOOL)unlockWithOwner:(id)objc {
-    
-    // 只有锁定者才能解除锁定
-    if ([self->_objc isEqual: objc]) {
+    if (self) {
         
-        // 放弃权限
-        self->_objc = nil;
-        return YES;
     }
-    else {
-        return NO;
-    }
+    
+    return self;
 }
 
 
@@ -135,7 +104,6 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             baseClient = [super allocWithZone:zone];
-            baseClient->_objc = nil;
             baseClient->_serviceUUIDs = nil;
         });
         return baseClient;
@@ -173,26 +141,17 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
 #pragma mark---设置可以扫描的回调
 - (void)setScanReadyBlock:(void (^)(CBCentralManagerState))scanReadyBlock {
     
-    if (self->_objc) {
-        self->_scanReadyBlock = scanReadyBlock;
-    }
-    else {
+    self->_scanReadyBlock = scanReadyBlock;
 #ifdef HXLOG_FLAG
         HXDEBUG;
-        NSLog(@"必须调用 lock: 方法才能使用");
-        exit(0);
 #endif
-    }
     
 }
 
 #pragma mark---找到外设
 - (void)setSearchedPeripheralBlock:(void (^)(HXBasePeripheralModel *))searchedPeripheralBlock{
     
-    // 锁定
-    if (self->_objc) {
-        self->_searchedPeripheralBlock = searchedPeripheralBlock;
-    }
+    self->_searchedPeripheralBlock = searchedPeripheralBlock;
     
 }
 
@@ -218,6 +177,9 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
     
     // 重置定时器
     [self.timeOutTimer invalidate];
+    
+    // 设置信号量
+    self->_peripheralSingalValue = -90;
     // 重新定时
     self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval: self.timeOutInterval target: self selector: @selector(scanTimeOut) userInfo: nil repeats: NO];
 }
@@ -235,8 +197,15 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
         model.peripheral = self.peripheral;
         model.state = kBasePeripheralStateConnected;
         model.error = nil;
+        
+        if (!self.peripheral) {
+            model.state = kBasePeripheralStateError;
+            model.error = [NSError errorWithDomain: @"com.new_life" code: 1024 userInfo: nil];
+        }
+        
         self->_searchedPeripheralBlock(model);
     }
+    
 }
 
 #pragma mark---停止扫描
@@ -244,15 +213,36 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
     [self.centralManager stopScan];
 }
 
-#pragma mark----连接外设
+#pragma mark---连接外设
 - (void)connectPeripheralWithOptions:(NSDictionary<NSString *,id> *)options {
+    // 连接外设
     [self.centralManager connectPeripheral: self.peripheral options: options];
 }
 
+#pragma mark--停止连接
+- (void) cancelPeripheralConnection {
+    
+    for (CBService *service in self.peripheral.services) {
+        
+        if (service) {
+            
+            for (CBCharacteristic *characteristic in service.characteristics) {
+                if (characteristic.isNotifying) {
+                    // 取消预订通知
+                    [self.peripheral setNotifyValue: NO forCharacteristic: characteristic];
+                }
+            }
+            
+        }
+    }
+    // 取消连接
+    [self.centralManager cancelPeripheralConnection: self.peripheral];
+    self.peripheral = nil;
+    self->_peripheralSingalValue = -90;
+}
+
 #pragma mark--- CBCentralManagerDelegate
-/**
- *  中心设备已更新状态
- */
+
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     
 #ifdef HXLOG_FLAG
@@ -264,9 +254,6 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
     }
 }
 
-/**
- *  发现外设
- */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
     
     // 过滤条件
@@ -306,16 +293,19 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     
+    HXDEBUG;
     if (self->_connectionPeripheralBlock) {
         HXBasePeripheralModel *model = [[HXBasePeripheralModel alloc] init];
         model.peripheral = peripheral;
-        model.state = kBasePeripheralStateConnected;
+        model.state = kBasePeripheralStateError;
         model.error = error;
         self->_connectionPeripheralBlock(model);
     }
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    
+    HXDEBUG;
     if (self->_connectionPeripheralBlock) {
         HXBasePeripheralModel *model = [[HXBasePeripheralModel alloc] init];
         model.peripheral = peripheral;

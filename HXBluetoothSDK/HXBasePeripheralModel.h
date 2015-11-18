@@ -9,9 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
+/**
+ *  外设连接状态
+ */
 typedef NS_ENUM(NSUInteger, BasePeripheralState) {
     kBasePeripheralStateConnected = 0,
-    
     kBasePeripheralStateError,
 };
 

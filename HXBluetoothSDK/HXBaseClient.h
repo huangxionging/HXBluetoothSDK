@@ -19,20 +19,6 @@
 + (instancetype) shareBaseClient;
 
 /**
- *  @brief  锁定权限, 主要用于设置回调的时候
- *  @param  objc 是锁定者
- *  @return 返回锁定成功或失败
- */
-- (BOOL) lockWithOwner: (id) objc;
-
-/**
- *  @brief  解除锁定权限, 主要用于设置回调的时候
- *  @param  objc 是锁定者, 需要解除锁定, 方便其他实例操作
- *  @return 返回解除锁定成功或者失败
- */
-- (BOOL) unlockWithOwner: (id) objc;
-
-/**
  *  @brief  添加待扫描外设的服务的 UUID
  *  @param  serviceUUID 是待扫描外设的服务的 UUID
  *  @return void
@@ -84,7 +70,6 @@
  */
 - (void) setConnectionPeripheralBlock: (void(^)(HXBasePeripheralModel *peripheral)) connectionPeripheralBlock;
 
-
 /**
  *  @brief  停止扫描
  *  @param  void
@@ -93,10 +78,17 @@
 - (void) stopScan;
 
 /**
- *  @brief  停止扫描
+ *  @brief  连接外设
  *  @param  options 是连接选项
  *  @return void
  */
 - (void) connectPeripheralWithOptions: (NSDictionary<NSString *,id> *) options;
+
+/**
+ *  @brief  取消连接外设
+ *  @param  void
+ *  @return void
+ */
+- (void) cancelPeripheralConnection;
 
 @end

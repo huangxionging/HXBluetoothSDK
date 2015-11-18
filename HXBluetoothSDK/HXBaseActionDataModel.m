@@ -7,7 +7,21 @@
 //
 
 #import "HXBaseActionDataModel.h"
+#import "HXBaseAction.h"
 
 @implementation HXBaseActionDataModel
+
++ (instancetype) modelWithAction: (HXBaseAction *)action {
+    HXBaseActionDataModel *actionDataModel = [[HXBaseActionDataModel alloc] init];
+    
+    if (actionDataModel) {
+        actionDataModel.actionData = [action actionData];
+        actionDataModel.characteristicString = [action.characteristicUUIDString lowercaseString];
+        actionDataModel.actionDatatype = kBaseActionDataTypeUpdateSend;
+        actionDataModel.writeType = CBCharacteristicWriteWithResponse;
+    }
+    
+    return actionDataModel;
+}
 
 @end

@@ -7,6 +7,9 @@
 //
 
 #import "HXBaseAction.h"
+#import "HXBaseActionDataModel.h"
+
+
 
 @interface HXBaseAction ()
 
@@ -14,23 +17,28 @@
 
 @implementation HXBaseAction
 
-- (NSData *)actionData {
-    return [[NSData alloc] init];
-}
 
-#pragma mark---操作的模型
-- (HXBaseActionDataModel *) modelForAction {
-    HXBaseActionDataModel *actionDataModel = [[HXBaseActionDataModel alloc] init];
++ (instancetype)actionWithFinishedBlock:(void (^)(BOOL, NSDictionary<NSString *,id> *))finishedBlock {
+    HXBaseAction *action = [[super alloc] init];
     
-    // 操作数据模型
-    if (actionDataModel) {
-        actionDataModel.actionData = self.actionData;
-        actionDataModel.characteristicString = self.characteristic.UUID.UUIDString;
-        actionDataModel.actionDatatype = kBaseActionDataTypeSend;
-        actionDataModel.writeType = kBaseActionWriteTypeWriteTypeWithResponse;
+    if (action) {
+        action->_finishedBlock = finishedBlock;
+        
+        // 类名
+        action->_acionName = [NSString stringWithUTF8String: object_getClassName(self)];
+        
+        // 默认命令长度
+        action->_actionLength = 20;
+        
+        // 监听完成对象
+    //    [action addObserver: action forKeyPath: @"finished" options:NSKeyValueObservingOptionNew context: nil];
     }
     
-    return actionDataModel;
+    return action;
+}
+
+- (NSData *)actionData {
+    return [[NSData alloc] init];
 }
 
 - (void)receiveUpdateData:(HXBaseActionDataModel *)updateDataModel {
@@ -38,7 +46,13 @@
 }
 
 - (void)setAnswerActionDataBlock:(void (^)(HXBaseActionDataModel *))answerActionBlock {
-    
+    self->_answerBlock = answerActionBlock;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString: @"finished"]) {
+        self.finished;
+    }
 }
 
 @end

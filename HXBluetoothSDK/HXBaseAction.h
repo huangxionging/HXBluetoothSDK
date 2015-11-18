@@ -10,7 +10,20 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "HXBaseActionDataModel.h"
 
-@interface HXBaseAction : NSObject
+/**
+ *  操作完成的回调
+ */
+typedef void(^finishedBlock)(BOOL finished, NSDictionary<NSString *, id> *finishedInfo);
+
+typedef void(^answerBlock)(HXBaseActionDataModel *answerModel);
+
+@interface HXBaseAction : NSObject {
+
+@protected
+    finishedBlock _finishedBlock;
+    answerBlock _answerBlock;
+    NSTimer *_finishedActionTimer;
+}
 
 /**
  *  操作的名字
@@ -23,14 +36,9 @@
 @property (nonatomic, assign, readonly) NSInteger actionLength;
 
 /**
- *  操作的数据
+ *  对应的特征的标识符
  */
-@property (nonatomic, strong, readonly) NSData *actionData;
-
-/**
- *  对应的特征
- */
-@property (nonatomic, strong) CBCharacteristic *characteristic;
+@property (nonatomic, copy) NSString *characteristicUUIDString;
 
 /**
  *  是否长包操作
@@ -42,8 +50,25 @@
  */
 @property (nonatomic, assign, readonly) BOOL finished;
 
+/**
+ *  操作的数据
+ */
+- (NSData *)actionData;
 
-- (HXBaseActionDataModel *) modelForAction;
+/**
+ *  对于不需要回复数据的操作, 建议使用此方法创建操作过
+ *  @brief  通过类方法创建以及完成操作的回调
+ *  @param  finishedBlock 是完成回调
+ *  @return 返回为实例化
+ */
++ (instancetype) actionWithFinishedBlock:(void(^)(BOOL finished, NSDictionary<NSString *, id> *finisedInfo)) finishedBlock;
+
+/**
+ *  对于不需要回复数据的操作, 建议使用此方法创建操作过
+ *  @brief  通过类方法创建以及完成操作的回调
+ *  @param  finishedBlock 是完成回调
+ *  @return 返回为实例化
+ */
 
 /**
  *  @brief  接收更新数据
@@ -58,5 +83,6 @@
  *  @return void
  */
 - (void) setAnswerActionDataBlock: (void(^)(HXBaseActionDataModel *answerDataModel)) answerActionBlock;
+
 
 @end

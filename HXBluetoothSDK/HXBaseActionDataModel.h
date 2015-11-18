@@ -7,37 +7,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+
+@class HXBaseAction;
 
 /**
  *  操作数据的数据类型
  */
 typedef NS_ENUM(NSUInteger, BaseActionDataType){
     /**
-     *  发送的数据
+     *  更新发送的数据 这个是 Client 发给 Device 的数据标志
      */
-    kBaseActionDataTypeSend = 0,
+    kBaseActionDataTypeUpdateSend = 0,
     
     /**
-     *  回复的数据
+     *  更新数据的回复的数据 
+     *  @see peripheral:didUpdateValueForCharacteristic:error
      */
-    kBaseActionDataTypeAnwser,
-};
-
-/**
- * 操作数据是否需要回复, 与 (CBCharacteristicWriteType) 对应
- */
-typedef NS_ENUM(NSUInteger, BaseActionWriteType){
-    /**
-     *  发送的数据
-     */
-    kBaseActionWriteTypeWriteTypeWithResponse = 0,
+    kBaseActionDataTypeUpdateAnwser,
     
     /**
-     *  回复的数据
+     *  写数据时的 
+     *  @see peripheral:didWriteValueForCharacteristic:error
      */
-    kBaseActionWriteTypeWriteTypeWithoutResponse,
+    kBaseActionDataTypeWriteAnswer,
 };
-
 
 @interface HXBaseActionDataModel : NSObject
 
@@ -64,6 +58,11 @@ typedef NS_ENUM(NSUInteger, BaseActionWriteType){
 /**
  *  是否需要回复
  */
-@property (nonatomic, assign) BaseActionWriteType writeType;
+@property (nonatomic, assign) CBCharacteristicWriteType writeType;
+
+/**
+ *  发送命令时使用
+ */
++ (instancetype) modelWithAction: (HXBaseAction *)action;
 
 @end
