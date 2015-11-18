@@ -9,13 +9,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HXBluetoothSDK/HXWKLSynchronizeParameterAction.m"
-            timestampString = "469504396.706786"
+            filePath = "HXBluetoothSDK/HXWKLStepAction.m"
+            timestampString = "469541922.574993"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "-receiveUpdateData:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HXBluetoothSDK/HXWKLStepAction.m"
+            timestampString = "469542210.284566"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
+            landmarkName = "-handleOneDaySteps"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

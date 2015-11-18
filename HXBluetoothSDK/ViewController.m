@@ -127,8 +127,10 @@
     }];
     
     stepAction.stepActionType = kWKLStepActionTypeSynchronizeStepData;
-    stepAction.startDate = @"2015/11/01";
-    stepAction.endDate = @"2015/11/16";
+    stepAction.startDate = @"0";
+    stepAction.endDate = @"0";
+//    stepAction.startDate = @"2015/11/01";
+//    stepAction.endDate = @"2015/11/16";
     
     // 发送同步操作
     [controller sendAction: stepAction];
