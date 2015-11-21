@@ -61,17 +61,17 @@ Byte _shortPackage[120][17];
 /**
  *  一天的总步数
  */
-@property (nonatomic, copy) NSString *oneDayTotalSteps;
+@property (nonatomic, copy) NSString *oneDayTotalSleeps;
 
 /**
  *  每天的数据步数信息
  */
-@property (nonatomic, strong) NSMutableDictionary *stepInfo;
+@property (nonatomic, strong) NSMutableDictionary *sleepInfo;
 
 /**
  * 包含所有长包数据
  */
-@property (nonatomic, strong) NSMutableArray *allStepData;
+@property (nonatomic, strong) NSMutableArray *allSleepData;
 
 @end
 
@@ -192,17 +192,17 @@ Byte _shortPackage[120][17];
     } else if (bytes[5] == 0x01) {
         NSLog(@"数据有效");
         // 总步数
-        NSInteger steps = bytes[6] * 256 + bytes[7];
+        NSInteger sleeps = bytes[6] * 256 + bytes[7];
         
-        NSLog(@"最后一天总步数%@", @(steps));
+        NSLog(@"最后一天总步数%@", @(sleeps));
     }
     
-    if (_stepInfo == nil) {
-        _stepInfo = [NSMutableDictionary dictionaryWithCapacity: _dayCount];
+    if (_sleepInfo == nil) {
+        _sleepInfo = [NSMutableDictionary dictionaryWithCapacity: _dayCount];
     }
     
     // 清空所有数据
-    [_stepInfo removeAllObjects];
+    [_sleepInfo removeAllObjects];
 }
 
 #pragma mark--- 处理每个长包的第一个短包数据
@@ -303,7 +303,7 @@ Byte _shortPackage[120][17];
     
     if ([self shortPackageFinished]) {
         // 处理这一天的数据
-        [self handleOneDaySteps];
+        [self handleOneDaySleepData];
     }
     
     [self sendBitControllTable];
@@ -327,7 +327,7 @@ Byte _shortPackage[120][17];
     return YES;
 }
 
-- (void) handleOneDaySteps {
+- (void) handleOneDaySleepData {
     
     for (NSInteger index = 0; index < _shortPackageCount; ++index) {
         
@@ -350,7 +350,7 @@ Byte _shortPackage[120][17];
     
     NSLog(@"%@: 所有数据:%@ ====> %@", _indicatorDate, _longPackageData, @(_longPackageData.length));
     
-    if (_longPackageData.length % 2 != 0) {
+    if (_longPackageData.length % 4 != 0) {
         HXDEBUG;
         exit(0);
     }
@@ -363,32 +363,31 @@ Byte _shortPackage[120][17];
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     
     
-    for (NSInteger index = 0; index < _longPackageData.length; index += 2) {
+    for (NSInteger index = 0; index < _longPackageData.length; index += 4) {
         
-        NSString *timeSection = [NSString stringWithFormat:@"%02ld:%02ld~%02ld:%02ld", (long)(index/2 * 30/ 60), (long)(index/2 * 30 % 60), (long)(long)((index/2 + 1)*30/60), (long)((index/2 + 1)*30%60)];
+        NSInteger start = bytes[index] * 256 + bytes[index + 1];
         
-        NSInteger stepData = bytes[index] * 256 + bytes[index + 1];
+        NSInteger startHour = start / 60;
+        NSInteger starMinute = start % 60;
         
-        if (stepData >= 0x000 && stepData <= 0xfeff) {
-            NSDictionary *dictInfo = @{@"time" : timeSection, @"steps" : @(stepData)};
-            [sportDataArray addObject: dictInfo];
-        } else if (stepData == 0xffff) {
-            NSDictionary *dictInfo = @{@"time" : timeSection, @"steps" : @"未佩戴设备"};
-            [sportDataArray addObject: dictInfo];
-        } else {
-            NSDictionary *dictInfo = @{@"time" : timeSection, @"steps" : @"未知状态"};
-            [sportDataArray addObject: dictInfo];
-        }
+
+        
+        NSInteger timeValue = bytes[index + 2];
+        
+        NSInteger level = bytes[index + 3];
+        
+        NSLog(@"开始时间: %@:%@  睡眠时长: %@, 等级: %@", @(startHour), @(starMinute), @(timeValue), @(level));
+       
     }
     
     [dictionary setObject: sportDataArray forKey: @"sportData"];
     [dictionary setObject: _indicatorDate forKey: @"date"];
     
-    if (_allStepData == nil) {
-        _allStepData = [NSMutableArray array];
+    if (_allSleepData == nil) {
+        _allSleepData = [NSMutableArray array];
     }
     // 将一天的长包数据组装回数组
-    [_allStepData addObject: dictionary];
+    [_allSleepData addObject: dictionary];
     
 }
 
@@ -423,13 +422,13 @@ Byte _shortPackage[120][17];
     if (_longPackageNumber == _dayCount) {
         // 表示所有数据发送完成
         
-        if (_stepInfo == nil) {
-            _stepInfo = [NSMutableDictionary dictionary];
+        if (_sleepInfo == nil) {
+            _sleepInfo = [NSMutableDictionary dictionary];
         }
-        [_stepInfo setObject: @"YES" forKey: @"state"];
-        [_stepInfo setObject: @"1000" forKey: @"code"];
-        [_stepInfo setObject: _allStepData forKey: @"data"];
-        self->_finishedBlock(YES, _stepInfo);
+        [_sleepInfo setObject: @"YES" forKey: @"state"];
+        [_sleepInfo setObject: @"1000" forKey: @"code"];
+        [_sleepInfo setObject: _allSleepData forKey: @"data"];
+        self->_finishedBlock(YES, _sleepInfo);
     }
     
     memset(_bitControlTable, 0xff, sizeof(Byte) * 15);
@@ -481,7 +480,7 @@ Byte _shortPackage[120][17];
     
     if ([self shortPackageFinished]) {
         // 处理这一天的数据
-        [self handleOneDaySteps];
+        [self handleOneDaySleepData];
     }
     
     [self sendBitControllTable];
