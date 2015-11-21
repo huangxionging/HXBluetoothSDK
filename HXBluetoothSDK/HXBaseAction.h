@@ -13,7 +13,7 @@
 /**
  *  操作完成的回调
  */
-typedef void(^finishedBlock)(BOOL finished, NSDictionary<NSString *, id> *finishedInfo);
+typedef void(^finishedBlock)(BOOL finished, id result);
 
 typedef void(^answerBlock)(HXBaseActionDataModel *answerModel);
 
@@ -61,7 +61,7 @@ typedef void(^answerBlock)(HXBaseActionDataModel *answerModel);
  *  @param  finishedBlock 是完成回调
  *  @return 返回为实例化
  */
-+ (instancetype) actionWithFinishedBlock:(void(^)(BOOL finished, NSDictionary<NSString *, id> *finisedInfo)) finishedBlock;
++ (instancetype) actionWithFinishedBlock:(void(^)(BOOL finished, id response)) finishedBlock;
 
 /**
  *  对于不需要回复数据的操作, 建议使用此方法创建操作过

@@ -47,16 +47,28 @@
  */
 @property (nonatomic, strong) NSString *writeCharacteristicUUIDString;
 
+@property (nonatomic, strong) void(^block)(BOOL finished, BlockType type);
+
+/**
+ *  操作字典, 回传数据根据操作字典进行投送
+ */
+@property (nonatomic, strong) NSMutableDictionary<NSString *, HXBaseAction *> *actionSheet;
+
 @end
 
 
 @implementation HXWKLController
+
+- (void)setBlock:(void (^)(BOOL, BlockType))block {
+    _block = block;
+}
 
 #pragma mark---初始化方法
 - (instancetype)init {
     self = [super init];
     
     if (self) {
+        
         
         NSString *path = [[NSBundle mainBundle] pathForResource: @"Bluetooth" ofType: @"plist"];
         
@@ -84,6 +96,9 @@
             // 取消定时器
             [self.baseDevice stopDiscoverCharacteristicTimer];
             
+            if (_block) {
+                _block(YES, kBlockTypeClient);
+            }
             NSLog(@"已链接");
             HXWKLBindDeviceAction *bindDeviceAction = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
 
@@ -91,6 +106,10 @@
                     
                     if (finished) {
                         NSLog(@"绑定成功");
+                        
+                        if (_block) {
+                            _block(YES, kBlockTypeDevice);
+                        }
                     }
                 }]];
             }];
@@ -125,6 +144,7 @@
         
         // 更新数据回调
         [weakSelf.baseDevice setUpdateDataBlock:^(HXBaseActionDataModel *actionDataModel) {
+            
             [baseAction receiveUpdateData: actionDataModel];
         }];
         

@@ -11,6 +11,13 @@
 #import "HXWKLBindDeviceAction.h"
 
 
+typedef NS_ENUM(NSUInteger, BlockType) {
+    kBlockTypeClient = 0,
+    kBlockTypeDevice,
+    
+};
+
+
 @interface HXWKLController : HXBaseController
 
 /**
@@ -19,6 +26,8 @@
  *  @return void
  */
 - (void) startWork;
+
+- (void) setBlock: (void(^)(BOOL finished, BlockType type)) block;
 
 
 @end

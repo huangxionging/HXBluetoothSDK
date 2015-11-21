@@ -1,25 +1,25 @@
 //
-//  HXWKLStepAction.m
+//  HXWKLSleepAction.m
 //  HXBluetoothSDK
 //
-//  Created by huangxiong on 15/11/14.
+//  Created by huangxiong on 15/11/20.
 //  Copyright © 2015年 huangxiong. All rights reserved.
 //
 
-#import "HXWKLStepAction.h"
+#import "HXWKLSleepAction.h"
 
+@interface HXWKLSleepAction () {
 
-@interface HXWKLStepAction () {
-    /**
-     *  位域控制表
-     */
+/**
+ *  位域控制表
+ */
 
-    Byte _bitControlTable[15];
-    
-    /**
-     *  短包数
-     */
-    Byte _shortPackage[120][17];
+Byte _bitControlTable[15];
+
+/**
+ *  短包数
+ */
+Byte _shortPackage[120][17];
 }
 
 /**
@@ -73,12 +73,9 @@
  */
 @property (nonatomic, strong) NSMutableArray *allStepData;
 
-
-
-
 @end
 
-@implementation HXWKLStepAction
+@implementation HXWKLSleepAction
 
 - (instancetype)init {
     
@@ -93,49 +90,43 @@
     
     Byte bytes[20] = {0};
     bytes[0] = 0x5a;
-    bytes[1] = 0x02;
-    
-    // 间隔时间
-    bytes[3] = self.saveInterval;
-    
-    if (self.stepActionType == kWKLStepActionTypeSynchronizeStepData) {
-        bytes[1] = 0x03;
-        if ([self.endDate isEqualToString: @"0"]) {
-            
-            
-            // 算法问题, 年份 - 2000, 表示两千年以后的年份
-            // 开始日期
-            bytes[3] = 0;
-            bytes[4] = 0;
-            bytes[5] = 0;
-            // 结束日期
-            bytes[6] = 0;
-            bytes[7] = 0;
-            bytes[8] = 0;
-        }
-        else {
-            NSArray *startDateArray = [self.startDate componentsSeparatedByString: @"/"];
-            NSArray *endDataArray = [self.endDate componentsSeparatedByString: @"/"];
-            
-            if (startDateArray.count != 3 || endDataArray.count != 3) {
-                HXDEBUG;
-                NSLog(@"日期不正确");
-                exit(0);
-            }
-            
-            // 算法问题, 年份 - 2000, 表示两千年以后的年份
-            // 开始日期
-            bytes[3] = [startDateArray[0] integerValue] - 2000;
-            bytes[4] = [startDateArray[1] integerValue];
-            bytes[5] = [startDateArray[2] integerValue];
-            // 结束日期
-            bytes[6] = [endDataArray[0] integerValue] - 2000;
-            bytes[7] = [endDataArray[1] integerValue];
-            bytes[8] = [endDataArray[2] integerValue];
+ 
+    bytes[1] = 0x07;
+    if ([self.endDate isEqualToString: @"0"]) {
+        
+        // 算法问题, 年份 - 2000, 表示两千年以后的年份
+        // 开始日期
+        bytes[3] = 0;
+        bytes[4] = 0;
+        bytes[5] = 0;
+        // 结束日期
+        bytes[6] = 0;
+        bytes[7] = 0;
+        bytes[8] = 0;
+    }
+    else {
+        NSArray *startDateArray = [self.startDate componentsSeparatedByString: @"/"];
+        NSArray *endDataArray = [self.endDate componentsSeparatedByString: @"/"];
+        
+        if (startDateArray.count != 3 || endDataArray.count != 3) {
+            HXDEBUG;
+            NSLog(@"日期不正确");
+            exit(0);
         }
         
-       
+        // 算法问题, 年份 - 2000, 表示两千年以后的年份
+        // 开始日期
+        bytes[3] = [startDateArray[0] integerValue] - 2000;
+        bytes[4] = [startDateArray[1] integerValue];
+        bytes[5] = [startDateArray[2] integerValue];
+        // 结束日期
+        bytes[6] = [endDataArray[0] integerValue] - 2000;
+        bytes[7] = [endDataArray[1] integerValue];
+        bytes[8] = [endDataArray[2] integerValue];
     }
+        
+        
+    
     
     NSData *actionData = [NSData dataWithBytes: bytes length: self.actionLength];
     
@@ -151,7 +142,7 @@
         Byte *bytes = (Byte *)[updateDataModel.actionData bytes];
         
         // 同步命令回复
-        if (bytes[0] == 0x5b && bytes[1] == 0x03) {
+        if (bytes[0] == 0x5b && bytes[1] == 0x07) {
             
             // 处理回复的第一个数据
             [self handleFirstAnswer: (Byte *) bytes];
@@ -184,7 +175,7 @@
                 [self handleNextDayDataPackage];
             }
         }
-       
+        
     }
 }
 
@@ -197,7 +188,7 @@
     NSLog(@"总天数%@", @(self.dayCount));
     
     if (bytes[5] == 0x00) {
-       
+        
     } else if (bytes[5] == 0x01) {
         NSLog(@"数据有效");
         // 总步数
@@ -224,7 +215,7 @@
     if (_longPackageData == nil) {
         _longPackageData = [NSMutableData data];
     }
-        
+    
     // 清空
     _longPackageData.length = 0;
     
@@ -284,7 +275,7 @@
     // 拼接有效数据数据
     Byte *effectiveByte = &bytes[3];
     
-     // 获取短包序号 是从 0x02 开始, 所以要减去 2
+    // 获取短包序号 是从 0x02 开始, 所以要减去 2
     memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * 17);
 }
 
@@ -308,7 +299,7 @@
     NSInteger effectiveLength = _effectiveDataCount % 17;
     
     memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * effectiveLength);
-   
+    
     
     if ([self shortPackageFinished]) {
         // 处理这一天的数据
@@ -351,7 +342,7 @@
             
             // 最后一个短包
             [_longPackageData appendBytes: _shortPackage[index] length: effectiveLength];
-          
+            
         } else {
             [_longPackageData appendBytes: &_shortPackage[index] length: 17];
         }
@@ -415,7 +406,7 @@
     
     Byte *bitControlTable = &bytes[5];
     memcpy(bitControlTable, _bitControlTable, sizeof(_bitControlTable) / sizeof(Byte));
-
+    
     NSData *bitControlTableData = [NSData dataWithBytes: bytes length: 20];
     
     model.actionData = bitControlTableData;
@@ -458,7 +449,7 @@
         bytes[3] = 0xff;
         bytes[4] = 0xff;
     }
-   
+    
     
     NSData *nextData = [NSData dataWithBytes: bytes length: 20];
     
@@ -469,7 +460,7 @@
     
     // 回传信息
     self->_answerBlock(model);
-
+    
 }
 
 

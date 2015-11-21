@@ -18,7 +18,7 @@
 @implementation HXBaseAction
 
 
-+ (instancetype)actionWithFinishedBlock:(void (^)(BOOL, NSDictionary<NSString *,id> *))finishedBlock {
++ (instancetype)actionWithFinishedBlock:(void (^)(BOOL, id responseObject))finishedBlock {
     HXBaseAction *action = [[super alloc] init];
     
     if (action) {

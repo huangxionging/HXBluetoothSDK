@@ -80,46 +80,13 @@
                                     <action selector="synchronizeSleep:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DU7-ke-MYZ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VnB-V9-fUB">
-                                <rect key="frame" x="240" y="140" width="60" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <animations/>
-                                <state key="normal" title="防丢开关"/>
-                                <connections>
-                                    <action selector="preventLossSwitch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Cah-dx-R71"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="elT-1w-ll9">
-                                <rect key="frame" x="20" y="187" width="60" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <animations/>
-                                <state key="normal" title="微信消息"/>
-                                <connections>
-                                    <action selector="wechatMessage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YrM-kU-9Qg"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Pq5-eJ-fXq">
-                                <rect key="frame" x="243" y="187" width="57" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <animations/>
-                                <state key="normal" title="QQ 消息"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="g1Z-IE-IXf">
-                                <rect key="frame" x="20" y="234" width="60" height="30"/>
+                                <rect key="frame" x="20" y="187" width="60" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <animations/>
                                 <state key="normal" title="重新搜索"/>
                                 <connections>
                                     <action selector="resStart:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qcz-hR-Vtn"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="sha-FA-iQY">
-                                <rect key="frame" x="130" y="234" width="60" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <animations/>
-                                <state key="normal" title="同步参数"/>
-                                <connections>
-                                    <action selector="synchronizeParameter:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HE0-mT-9xw"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pjx-Xh-Jpd">
@@ -132,6 +99,15 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="RE8-9N-Rfo"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="sha-FA-iQY">
+                                <rect key="frame" x="240" y="140" width="60" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <animations/>
+                                <state key="normal" title="同步参数"/>
+                                <connections>
+                                    <action selector="synchronizeParameter:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HE0-mT-9xw"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

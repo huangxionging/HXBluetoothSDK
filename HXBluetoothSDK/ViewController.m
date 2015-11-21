@@ -16,6 +16,7 @@
 #import "HXWKLStepAction.h"
 #import "HXWKLSynchronizeParameterAction.h"
 #import "NSDate+HXUtilityTool.h"
+#import "HXWKLSleepAction.h"
 
 @interface ViewController ()<UITableViewDataSource, UITableViewDelegate> {
     HXWKLController *controller;
@@ -35,6 +36,20 @@
        
     controller = [[HXWKLController alloc] init];
     
+    __weak UILabel *title = _titleString;
+    [controller setBlock:^(BOOL finished, BlockType type) {
+        if (finished == YES) {
+            if (type == kBlockTypeClient) {
+                title.text = @"正在绑定...";
+            }
+            else {
+                [_indicatorView stopAnimating];
+                _indicatorView.hidden = YES;
+                title.text = @"绑定成功...";
+            }
+        }
+    }];
+    
     [controller startWork];
     
 }
@@ -45,6 +60,11 @@
 }
 
 - (IBAction)resStart:(id)sender {
+    
+    [controller.baseClient cancelPeripheralConnection];
+    _indicatorView.hidden = NO;
+    [_indicatorView startAnimating];
+    _titleString.text = @"正在搜索....";
     if (controller.baseClient) {
         [controller.baseClient startScanPeripheralWithOptions: nil];
     }
@@ -67,9 +87,11 @@
 
 - (IBAction)cancleBindDevice:(id)sender {
     
+    _titleString.text = @"解除绑定成功...";
     HXWKLBindDeviceAction *cancleBindDevice = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
         if (finished == YES) {
             NSLog(@"解除绑定成功");
+            
         }
         
     }];
@@ -104,10 +126,13 @@
 
 - (IBAction)applyBindDevice:(id)sender {
     
-    HXWKLBindDeviceAction *applyBindDevice = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
+    
+    HXWKLBindDeviceAction *applyBindDevice = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
         
         if (finished == YES) {
             NSLog(@"绑定成功");
+            [_indicatorView stopAnimating];
+            _indicatorView.hidden = YES;
         }
         
     }];
@@ -122,8 +147,17 @@
 }
 
 - (IBAction)synchronizeStep:(id)sender {
-    HXWKLStepAction *stepAction = [HXWKLStepAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
+    
+    _titleString.text = @"正在同步计步...";
+    _indicatorView.hidden = NO;
+    [_indicatorView startAnimating];
+    HXWKLStepAction *stepAction = [HXWKLStepAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
         
+        _titleString.text = @"同步成功";
+        _indicatorView.hidden = YES;
+        [_indicatorView stopAnimating];
+        _dataSource = responseObject[@"data"];
+        [_tableView reloadData];
     }];
     
     stepAction.stepActionType = kWKLStepActionTypeSynchronizeStepData;
@@ -147,11 +181,47 @@
 }
 
 - (IBAction)synchronizeSleep:(id)sender {
+    
+    _titleString.text = @"正在同步计步...";
+    _indicatorView.hidden = NO;
+    [_indicatorView startAnimating];
+    HXWKLSleepAction *sleepAction = [HXWKLSleepAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
+        
+        _titleString.text = @"同步成功";
+        _indicatorView.hidden = YES;
+        [_indicatorView stopAnimating];
+        _dataSource = responseObject[@"data"];
+        [_tableView reloadData];
+    }];
+    
+ //   sleepAction.stepActionType = kWKLStepActionTypeSynchronizeStepData;
+    sleepAction.startDate = @"0";
+    sleepAction.endDate = @"0";
+    //    stepAction.startDate = @"2015/11/01";
+    //    stepAction.endDate = @"2015/11/16";
+    
+    // 发送同步操作
+    [controller sendAction: sleepAction];
+    
+    [sleepAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
+        [controller.baseDevice sendActionWithModel: answerDataModel];
+    }];
+
 }
 
 - (IBAction)synchronizeParameter:(id)sender {
-    HXWKLSynchronizeParameterAction *synchronizeParam = [HXWKLSynchronizeParameterAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
+    
+    _titleString.text = @"正在同步参数...";
+    _indicatorView.hidden = NO;
+    [_indicatorView startAnimating];
+    
+    
+    
+    HXWKLSynchronizeParameterAction *synchronizeParam = [HXWKLSynchronizeParameterAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
         
+        _titleString.text = @"同步成功";
+        _indicatorView.hidden = YES;
+        [_indicatorView stopAnimating];
         
     }];
     synchronizeParam.time = [[NSDate date] stringForCurrentDateWithFormatString: @"yyyy/MM/dd HH:mm:ss"];
@@ -175,15 +245,36 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return _dataSource.count;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _dataSource.count;
+    return [_dataSource[section][@"sportData"] count];
+}
+
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return _dataSource[section][@"date"];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 20;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return  nil;
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell"];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1 reuseIdentifier: @"Cell"];
+        
+    }
+    
+    NSDictionary *dict = _dataSource[indexPath.section][@"sportData"][indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat: @"时间: %@", dict.allValues[1]];
+    cell.detailTextLabel.text = [NSString stringWithFormat: @"%@ 步", dict.allValues[0]];
+    
+    return  cell;
 }
 @end

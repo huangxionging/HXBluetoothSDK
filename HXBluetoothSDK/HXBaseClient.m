@@ -222,6 +222,10 @@ typedef void(^basePeripheralBlock)(HXBasePeripheralModel *peripheral);
 #pragma mark--停止连接
 - (void) cancelPeripheralConnection {
     
+    if (self.peripheral == nil) {
+        return;
+    }
+    
     for (CBService *service in self.peripheral.services) {
         
         if (service) {

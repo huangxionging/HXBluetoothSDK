@@ -82,6 +82,7 @@ typedef void(^discoverCharacteristicTimerBlock)(NSError *error);
     
     // 超时定时器
     NSTimer *_timeOutTimer;
+    
 }
 
 

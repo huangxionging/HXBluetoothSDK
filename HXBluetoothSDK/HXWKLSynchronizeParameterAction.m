@@ -91,9 +91,9 @@
             NSInteger gujian = bytes[13] * 256 + bytes[14];
             
             NSString *string = [NSString stringWithFormat: @"%c%c%c%c%c", bytes[15], bytes[16], bytes[17], bytes[18], bytes[19]];
-            NSLog(@"设备型号:%@", string);
+            NSLog(@"设备型号:%@ ==== 固件版本: %@", string, @(gujian));
             
-
+            
         }
     }
     
