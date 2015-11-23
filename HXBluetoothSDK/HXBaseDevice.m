@@ -288,6 +288,7 @@ typedef void(^discoverCharacteristicTimerBlock)(NSError *error);
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
 #ifdef HXLOG_FLAG
+    
     HXDEBUG;
 #endif
     

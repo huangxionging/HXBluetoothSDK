@@ -182,7 +182,7 @@
 
 - (IBAction)synchronizeSleep:(id)sender {
     
-    _titleString.text = @"正在同步计步...";
+    _titleString.text = @"正在同步睡眠...";
     _indicatorView.hidden = NO;
     [_indicatorView startAnimating];
     HXWKLSleepAction *sleepAction = [HXWKLSleepAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {

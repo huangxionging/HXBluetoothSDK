@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HXBluetoothSDK/HXWKLStepAction.m"
-            timestampString = "469705863.197523"
+            timestampString = "469936793.635452"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
+            startingLineNumber = "364"
+            endingLineNumber = "364"
             landmarkName = "-handleOneDaySteps"
             landmarkType = "5">
          </BreakpointContent>

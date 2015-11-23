@@ -298,7 +298,7 @@ Byte _shortPackage[120][17];
     // 最后一个有效数据的长度
     NSInteger effectiveLength = _effectiveDataCount % 17;
     
-    memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * effectiveLength);
+    memcpy(_shortPackage[_shortPackageNumber - 1], effectiveByte, sizeof(Byte) * effectiveLength);
     
     
     if ([self shortPackageFinished]) {
@@ -476,7 +476,7 @@ Byte _shortPackage[120][17];
     // 最后一个有效数据的长度
     NSInteger effectiveLength = _effectiveDataCount % 17;
     
-    memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * effectiveLength);
+    memcpy(_shortPackage[_shortPackageNumber - 1], effectiveByte, sizeof(Byte) * effectiveLength);
     
     if ([self shortPackageFinished]) {
         // 处理这一天的数据

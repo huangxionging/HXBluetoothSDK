@@ -307,7 +307,8 @@
     // 最后一个有效数据的长度
     NSInteger effectiveLength = _effectiveDataCount % 17;
     
-    memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * effectiveLength);
+    // 最后一个数据位
+    memcpy(_shortPackage[_shortPackageNumber - 1], effectiveByte, sizeof(Byte) * effectiveLength);
    
     
     if ([self shortPackageFinished]) {
@@ -427,6 +428,7 @@
     self->_answerBlock(model);
 }
 
+#pragma mark---处理请求下一天的数据
 - (void) handleNextDayDataPackage {
     
     if (_longPackageNumber == _dayCount) {
@@ -459,9 +461,8 @@
         bytes[4] = 0xff;
     }
    
-    
+    // 下一个长包数据, 若无则无返回数据
     NSData *nextData = [NSData dataWithBytes: bytes length: 20];
-    
     model.actionData = nextData;
     model.actionDatatype = kBaseActionDataTypeUpdateSend;
     model.writeType = CBCharacteristicWriteWithResponse;
@@ -472,8 +473,13 @@
 
 }
 
-
+#pragma mark---每个长包最后一包数据
 - (void) handleLastDayPackage: (Byte *)bytes {
+    
+    // 有效数据放行
+    if (bytes[2] != 0xff) {
+        return;
+    }
     _shortPackageNumber = _shortPackageCount;
     
     // 修改位域信息
@@ -486,7 +492,8 @@
     // 最后一个有效数据的长度
     NSInteger effectiveLength = _effectiveDataCount % 17;
     
-    memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * effectiveLength);
+    // 每天最后一包数据
+    memcpy(_shortPackage[_shortPackageNumber - 1], effectiveByte, sizeof(Byte) * effectiveLength);
     
     if ([self shortPackageFinished]) {
         // 处理这一天的数据
