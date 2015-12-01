@@ -257,6 +257,7 @@ Byte _shortPackage[120][17];
     memset(_shortPackage, '\0', sizeof(_shortPackage));
 }
 
+#pragma mark---处理有效数据
 - (void) handleShortPackageEffectiveAnswer: (Byte *) bytes {
     
     // 屏蔽掉不合理数据
@@ -279,6 +280,7 @@ Byte _shortPackage[120][17];
     memcpy(_shortPackage[_shortPackageNumber - 2], effectiveByte, sizeof(Byte) * 17);
 }
 
+#pragma mark---处理除最后一个长包外的每个长包的最后一个短包,
 - (void) handleShortPackageLastAnswer: (Byte *) bytes {
     
     // 过滤数据
@@ -319,7 +321,7 @@ Byte _shortPackage[120][17];
     for (NSInteger index = 0; index < 15; ++index) {
         
         if (_bitControlTable[index] != 0x00) {
-            flag = NO;
+
             return NO;
         }
     }
@@ -327,6 +329,7 @@ Byte _shortPackage[120][17];
     return YES;
 }
 
+#pragma mark---处理睡眠数据
 - (void) handleOneDaySleepData {
     
     for (NSInteger index = 0; index < _shortPackageCount; ++index) {
@@ -371,7 +374,6 @@ Byte _shortPackage[120][17];
         NSInteger starMinute = start % 60;
         
 
-        
         NSInteger timeValue = bytes[index + 2];
         
         NSInteger level = bytes[index + 3];
@@ -404,6 +406,7 @@ Byte _shortPackage[120][17];
     bytes[4] = _longPackageNumber % 256;
     
     Byte *bitControlTable = &bytes[5];
+    
     memcpy(bitControlTable, _bitControlTable, sizeof(_bitControlTable) / sizeof(Byte));
     
     NSData *bitControlTableData = [NSData dataWithBytes: bytes length: 20];
@@ -417,9 +420,10 @@ Byte _shortPackage[120][17];
     self->_answerBlock(model);
 }
 
+#pragma mark---处理请求下一个长包
 - (void) handleNextDayDataPackage {
     
-    if (_longPackageNumber == _dayCount) {
+    if (_longPackageNumber == _dayCount || _dayCount == 1) {
         // 表示所有数据发送完成
         
         if (_sleepInfo == nil) {
@@ -444,14 +448,13 @@ Byte _shortPackage[120][17];
     bytes[3] = _longPackageNumber / 256;
     bytes[4] = _longPackageNumber % 256;
     
-    if (_longPackageNumber == _dayCount) {
+    if (_longPackageNumber == _dayCount || _dayCount == 1) {
         bytes[3] = 0xff;
         bytes[4] = 0xff;
     }
     
-    
+    // 请求下一个回复数据
     NSData *nextData = [NSData dataWithBytes: bytes length: 20];
-    
     model.actionData = nextData;
     model.actionDatatype = kBaseActionDataTypeUpdateSend;
     model.writeType = CBCharacteristicWriteWithResponse;
@@ -462,7 +465,7 @@ Byte _shortPackage[120][17];
     
 }
 
-
+#pragma mark---处理最后一个长包的最后一个短包数据
 - (void) handleLastDayPackage: (Byte *)bytes {
     _shortPackageNumber = _shortPackageCount;
     

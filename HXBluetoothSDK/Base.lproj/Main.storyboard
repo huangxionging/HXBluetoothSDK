@@ -108,6 +108,15 @@
                                     <action selector="synchronizeParameter:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HE0-mT-9xw"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="uaC-48-kex">
+                                <rect key="frame" x="240" y="187" width="60" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <animations/>
+                                <state key="normal" title="查询余额"/>
+                                <connections>
+                                    <action selector="queryBalance:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zG3-TY-lu5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

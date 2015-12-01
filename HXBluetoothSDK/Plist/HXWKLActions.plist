@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>query_action</key>
+	<dict>
+		<key>param</key>
+		<array/>
+		<key>name</key>
+		<string>HXWKLQueryAction</string>
+	</dict>
+	<key>_action</key>
+	<dict>
+		<key>param</key>
+		<array/>
+		<key>name</key>
+		<string>HXWKLSynchronizeAction</string>
+	</dict>
+	<key>step_action</key>
+	<dict>
+		<key>param</key>
+		<array/>
+		<key>name</key>
+		<string>HXWKLStepAction</string>
+	</dict>
+	<key>sleep_action</key>
+	<dict>
+		<key>param</key>
+		<array/>
+		<key>name</key>
+		<string>HXWKLSleepAction</string>
+	</dict>
+	<key>bind_action</key>
+	<dict>
+		<key>param</key>
+		<array/>
+		<key>name</key>
+		<string>HXWKLBindDeviceAction</string>
+	</dict>
+	<key>base_action</key>
+	<dict>
+		<key>param</key>
+		<array>
+			<string>bbb</string>
+		</array>
+		<key>name</key>
+		<string>HXBaseAction</string>
+	</dict>
+</dict>
+</plist>

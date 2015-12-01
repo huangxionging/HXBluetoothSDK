@@ -62,7 +62,8 @@
     if (updateDataModel) {
         Byte *bytes = (Byte *)[updateDataModel.actionData bytes];
         
-        if (updateDataModel.actionDatatype == kBaseActionDataTypeUpdateAnwser) {
+        // 并且操作数据存在
+        if (updateDataModel.actionDatatype == kBaseActionDataTypeUpdateAnwser && bytes) {
             if (bytes[0] == 0x5a && bytes[1] == 0x0b && bytes[3] == 0x02 && bytes[4] == 0x00) {
                 // 这个是确认绑定指令
                 self->_bindDeviceState = kWKLBindDeviceStateConfirm;

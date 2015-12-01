@@ -17,6 +17,7 @@
 #import "HXWKLSynchronizeParameterAction.h"
 #import "NSDate+HXUtilityTool.h"
 #import "HXWKLSleepAction.h"
+#import "HXWKLPayAction.h"
 
 @interface ViewController ()<UITableViewDataSource, UITableViewDelegate> {
     HXWKLController *controller;
@@ -114,7 +115,7 @@
         
     }];
     
-    changeColorAction.colorType = arc4random() % 4;
+   // changeColorAction.colorType = (unsigned int)arc4random() % 4;
     
     [controller sendAction: changeColorAction];
     
@@ -241,6 +242,20 @@
     
     [synchronizeParam setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
         
+    }];
+}
+
+- (IBAction)queryBalance:(id)sender {
+    HXWKLPayAction *payAction = [HXWKLPayAction actionWithFinishedBlock:^(BOOL finished, id response) {
+        
+    }];
+    payAction.payActionType = kWKLPayActionTypeQueryBalance;
+    
+    
+    [controller sendAction: payAction];
+    
+    [payAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
+        [controller.baseDevice sendActionWithModel: answerDataModel];
     }];
 }
 

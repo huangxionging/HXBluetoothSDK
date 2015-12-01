@@ -24,6 +24,7 @@
 - (IBAction)wechatMessage:(id)sender;
 - (IBAction)synchronizeSleep:(id)sender;
 - (IBAction)synchronizeParameter:(id)sender;
+- (IBAction)queryBalance:(id)sender;
 
 @end
 

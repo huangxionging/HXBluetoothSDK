@@ -12,6 +12,14 @@
 
 - (void)get:(NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, NSError *))failure {
     
+    if ([URLString containsString: @"?"]) {
+        
+    }
+    else {
+        
+    }
+    
+    
 }
 
 - (void)post:(NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, NSError *))failure {
