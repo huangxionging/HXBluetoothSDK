@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F227325D1C05A5CA003C8617 /* HXWKLActions.plist in Resources */ = {isa = PBXBuildFile; fileRef = F227325C1C05A5CA003C8617 /* HXWKLActions.plist */; };
+		F208505D1C24F6C70055FFC9 /* HXBaseContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = F208505C1C24F6C70055FFC9 /* HXBaseContainer.m */; };
+		F212EA7B1C24100A00BF4150 /* HXBaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F212EA7A1C24100A00BF4150 /* HXBaseQueue.m */; };
+		F227325D1C05A5CA003C8617 /* HXWKLBluetooth.plist in Resources */ = {isa = PBXBuildFile; fileRef = F227325C1C05A5CA003C8617 /* HXWKLBluetooth.plist */; };
 		F26EF3D61BEAE4290073C45D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F26EF3D51BEAE4290073C45D /* main.m */; };
 		F26EF3D91BEAE4290073C45D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F26EF3D81BEAE4290073C45D /* AppDelegate.m */; };
 		F26EF3DC1BEAE4290073C45D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26EF3DB1BEAE4290073C45D /* ViewController.m */; };
@@ -31,8 +33,8 @@
 		F26EF44C1BF17B510073C45D /* HXWKLController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26EF44B1BF17B510073C45D /* HXWKLController.m */; };
 		F26EF4511BF19AF60073C45D /* HXWKLSearchDeviceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F26EF4501BF19AF60073C45D /* HXWKLSearchDeviceAction.m */; };
 		F273CCAA1BFEB2A40088F499 /* HXWKLSleepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F273CCA91BFEB2A40088F499 /* HXWKLSleepAction.m */; };
-		F273CCAD1BFF1B100088F499 /* HXWKLWorking.m in Sources */ = {isa = PBXBuildFile; fileRef = F273CCAC1BFF1B100088F499 /* HXWKLWorking.m */; };
-		F2874A4D1BFDAB7500ACF1F1 /* HXBaseWorking.m in Sources */ = {isa = PBXBuildFile; fileRef = F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorking.m */; };
+		F273CCAD1BFF1B100088F499 /* HXWKLWorkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F273CCAC1BFF1B100088F499 /* HXWKLWorkingManager.m */; };
+		F2874A4D1BFDAB7500ACF1F1 /* HXBaseWorkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorkingManager.m */; };
 		F29474D41C043BE50054CAC5 /* HXWKLTransparentTransmissionAction.mm in Sources */ = {isa = PBXBuildFile; fileRef = F29474D31C043BE50054CAC5 /* HXWKLTransparentTransmissionAction.mm */; };
 		F298BBCD1BFAC202009BF17E /* HXWKLSynchronizeParameterAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F298BBCC1BFAC202009BF17E /* HXWKLSynchronizeParameterAction.m */; };
 		F298BBD01BFAD35D009BF17E /* NSDate+HXUtilityTool.m in Sources */ = {isa = PBXBuildFile; fileRef = F298BBCF1BFAD35D009BF17E /* NSDate+HXUtilityTool.m */; };
@@ -42,6 +44,8 @@
 		F2A8E81F1C085C7100C5A96B /* StringToHex.mm in Sources */ = {isa = PBXBuildFile; fileRef = F2A8E8171C08560F00C5A96B /* StringToHex.mm */; };
 		F2BAD2491BF71FE50035676D /* HXWKLChangeColorAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BAD2481BF71FE50035676D /* HXWKLChangeColorAction.m */; };
 		F2BAD24C1BF7265E0035676D /* HXWKLStepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BAD24B1BF7265E0035676D /* HXWKLStepAction.m */; };
+		F2F029BF1C10286F002AD6FA /* HXBaseError.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F029BE1C10286F002AD6FA /* HXBaseError.m */; };
+		F2F029C21C10456B002AD6FA /* HXWKLSimpleControlAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F029C11C10456B002AD6FA /* HXWKLSimpleControlAction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +66,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F227325C1C05A5CA003C8617 /* HXWKLActions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXWKLActions.plist; sourceTree = "<group>"; };
+		F208505B1C24F6C70055FFC9 /* HXBaseContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXBaseContainer.h; sourceTree = "<group>"; };
+		F208505C1C24F6C70055FFC9 /* HXBaseContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXBaseContainer.m; sourceTree = "<group>"; };
+		F212EA791C24100A00BF4150 /* HXBaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXBaseQueue.h; sourceTree = "<group>"; };
+		F212EA7A1C24100A00BF4150 /* HXBaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXBaseQueue.m; sourceTree = "<group>"; };
+		F227325C1C05A5CA003C8617 /* HXWKLBluetooth.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXWKLBluetooth.plist; sourceTree = "<group>"; };
 		F26EF3D11BEAE4290073C45D /* HXBluetoothSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXBluetoothSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F26EF3D51BEAE4290073C45D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F26EF3D71BEAE4290073C45D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -106,10 +114,10 @@
 		F26EF4501BF19AF60073C45D /* HXWKLSearchDeviceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLSearchDeviceAction.m; sourceTree = "<group>"; };
 		F273CCA81BFEB2A40088F499 /* HXWKLSleepAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLSleepAction.h; sourceTree = "<group>"; };
 		F273CCA91BFEB2A40088F499 /* HXWKLSleepAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLSleepAction.m; sourceTree = "<group>"; };
-		F273CCAB1BFF1B100088F499 /* HXWKLWorking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLWorking.h; sourceTree = "<group>"; };
-		F273CCAC1BFF1B100088F499 /* HXWKLWorking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLWorking.m; sourceTree = "<group>"; };
-		F2874A4B1BFDAB7500ACF1F1 /* HXBaseWorking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXBaseWorking.h; sourceTree = "<group>"; };
-		F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXBaseWorking.m; sourceTree = "<group>"; };
+		F273CCAB1BFF1B100088F499 /* HXWKLWorkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLWorkingManager.h; sourceTree = "<group>"; };
+		F273CCAC1BFF1B100088F499 /* HXWKLWorkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLWorkingManager.m; sourceTree = "<group>"; };
+		F2874A4B1BFDAB7500ACF1F1 /* HXBaseWorkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXBaseWorkingManager.h; sourceTree = "<group>"; };
+		F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXBaseWorkingManager.m; sourceTree = "<group>"; };
 		F29474D21C043BE50054CAC5 /* HXWKLTransparentTransmissionAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLTransparentTransmissionAction.h; sourceTree = "<group>"; };
 		F29474D31C043BE50054CAC5 /* HXWKLTransparentTransmissionAction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HXWKLTransparentTransmissionAction.mm; sourceTree = "<group>"; };
 		F298BBCB1BFAC202009BF17E /* HXWKLSynchronizeParameterAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLSynchronizeParameterAction.h; sourceTree = "<group>"; };
@@ -127,6 +135,10 @@
 		F2BAD2481BF71FE50035676D /* HXWKLChangeColorAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLChangeColorAction.m; sourceTree = "<group>"; };
 		F2BAD24A1BF7265E0035676D /* HXWKLStepAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLStepAction.h; sourceTree = "<group>"; };
 		F2BAD24B1BF7265E0035676D /* HXWKLStepAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLStepAction.m; sourceTree = "<group>"; };
+		F2F029BD1C10286F002AD6FA /* HXBaseError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXBaseError.h; sourceTree = "<group>"; };
+		F2F029BE1C10286F002AD6FA /* HXBaseError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXBaseError.m; sourceTree = "<group>"; };
+		F2F029C01C10456B002AD6FA /* HXWKLSimpleControlAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXWKLSimpleControlAction.h; sourceTree = "<group>"; };
+		F2F029C11C10456B002AD6FA /* HXWKLSimpleControlAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXWKLSimpleControlAction.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +167,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F208505A1C24EEB80055FFC9 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				F208505B1C24F6C70055FFC9 /* HXBaseContainer.h */,
+				F208505C1C24F6C70055FFC9 /* HXBaseContainer.m */,
+			);
+			name = Container;
+			sourceTree = "<group>";
+		};
+		F212EA781C240FD500BF4150 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				F212EA791C24100A00BF4150 /* HXBaseQueue.h */,
+				F212EA7A1C24100A00BF4150 /* HXBaseQueue.m */,
+			);
+			name = Queue;
+			sourceTree = "<group>";
+		};
 		F26EF3C81BEAE4290073C45D = {
 			isa = PBXGroup;
 			children = (
@@ -230,9 +260,12 @@
 				F26EF4301BF09A2B0073C45D /* Client */,
 				F26EF42F1BF09A230073C45D /* Device */,
 				F26EF4331BF09A5A0073C45D /* Controller */,
+				F212EA781C240FD500BF4150 /* Queue */,
 				F26EF4311BF09A380073C45D /* Action */,
+				F208505A1C24EEB80055FFC9 /* Container */,
 				F26EF4321BF09A440073C45D /* Model */,
-				F2874A4A1BFDAB4100ACF1F1 /* HXWorking */,
+				F2F029BC1C102804002AD6FA /* Error */,
+				F2874A4A1BFDAB4100ACF1F1 /* WorkingManager */,
 			);
 			name = HXBluetoothSDK;
 			sourceTree = "<group>";
@@ -305,7 +338,7 @@
 				F26EF4371BF0A27F0073C45D /* Bluetooth.plist */,
 				F26EF4381BF0A27F0073C45D /* Device.plist */,
 				F26EF4391BF0A27F0073C45D /* UpgradeWay.plist */,
-				F227325C1C05A5CA003C8617 /* HXWKLActions.plist */,
+				F227325C1C05A5CA003C8617 /* HXWKLBluetooth.plist */,
 			);
 			path = Plist;
 			sourceTree = "<group>";
@@ -322,6 +355,8 @@
 		F26EF44E1BF19AAC0073C45D /* WKLAction */ = {
 			isa = PBXGroup;
 			children = (
+				F2F029C01C10456B002AD6FA /* HXWKLSimpleControlAction.h */,
+				F2F029C11C10456B002AD6FA /* HXWKLSimpleControlAction.m */,
 				F26EF44F1BF19AF60073C45D /* HXWKLSearchDeviceAction.h */,
 				F26EF4501BF19AF60073C45D /* HXWKLSearchDeviceAction.m */,
 				F2A636E71BF3217300859050 /* HXWKLBindDeviceAction.h */,
@@ -347,19 +382,28 @@
 		F2874A451BFDA98A00ACF1F1 /* WKLBluetoothWorking */ = {
 			isa = PBXGroup;
 			children = (
-				F273CCAB1BFF1B100088F499 /* HXWKLWorking.h */,
-				F273CCAC1BFF1B100088F499 /* HXWKLWorking.m */,
+				F273CCAB1BFF1B100088F499 /* HXWKLWorkingManager.h */,
+				F273CCAC1BFF1B100088F499 /* HXWKLWorkingManager.m */,
 			);
 			name = WKLBluetoothWorking;
 			sourceTree = "<group>";
 		};
-		F2874A4A1BFDAB4100ACF1F1 /* HXWorking */ = {
+		F2874A4A1BFDAB4100ACF1F1 /* WorkingManager */ = {
 			isa = PBXGroup;
 			children = (
-				F2874A4B1BFDAB7500ACF1F1 /* HXBaseWorking.h */,
-				F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorking.m */,
+				F2874A4B1BFDAB7500ACF1F1 /* HXBaseWorkingManager.h */,
+				F2874A4C1BFDAB7500ACF1F1 /* HXBaseWorkingManager.m */,
 			);
-			name = HXWorking;
+			name = WorkingManager;
+			sourceTree = "<group>";
+		};
+		F2F029BC1C102804002AD6FA /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				F2F029BD1C10286F002AD6FA /* HXBaseError.h */,
+				F2F029BE1C10286F002AD6FA /* HXBaseError.m */,
+			);
+			name = Error;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -429,7 +473,7 @@
 				TargetAttributes = {
 					F26EF3D01BEAE4290073C45D = {
 						CreatedOnToolsVersion = 7.1;
-						DevelopmentTeam = 6EW99E5PRN;
+						DevelopmentTeam = U9662QUFW3;
 					};
 					F26EF3EC1BEAE4290073C45D = {
 						CreatedOnToolsVersion = 7.1;
@@ -474,7 +518,7 @@
 				F26EF3DF1BEAE4290073C45D /* Main.storyboard in Resources */,
 				F26EF43A1BF0A27F0073C45D /* Bluetooth.plist in Resources */,
 				F26EF43C1BF0A27F0073C45D /* UpgradeWay.plist in Resources */,
-				F227325D1C05A5CA003C8617 /* HXWKLActions.plist in Resources */,
+				F227325D1C05A5CA003C8617 /* HXWKLBluetooth.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,10 +546,12 @@
 				F26EF42B1BF076B30073C45D /* HXBasePeripheralModel.m in Sources */,
 				F26EF40C1BEAE66C0073C45D /* HXBaseClient.m in Sources */,
 				F26EF4151BEC47BC0073C45D /* HXBaseAction.m in Sources */,
+				F2F029BF1C10286F002AD6FA /* HXBaseError.m in Sources */,
+				F2F029C21C10456B002AD6FA /* HXWKLSimpleControlAction.m in Sources */,
 				F298BBD01BFAD35D009BF17E /* NSDate+HXUtilityTool.m in Sources */,
 				F298BBCD1BFAC202009BF17E /* HXWKLSynchronizeParameterAction.m in Sources */,
 				F26EF4181BEC481A0073C45D /* HXBaseDevice.m in Sources */,
-				F273CCAD1BFF1B100088F499 /* HXWKLWorking.m in Sources */,
+				F273CCAD1BFF1B100088F499 /* HXWKLWorkingManager.m in Sources */,
 				F2A5FF941C02B68900D87E47 /* HXWKLPayAction.mm in Sources */,
 				F2A8E81F1C085C7100C5A96B /* StringToHex.mm in Sources */,
 				F2BAD2491BF71FE50035676D /* HXWKLChangeColorAction.m in Sources */,
@@ -513,6 +559,7 @@
 				F26EF4281BF06F7F0073C45D /* HXBaseActionDataModel.m in Sources */,
 				F26EF44C1BF17B510073C45D /* HXWKLController.m in Sources */,
 				F26EF41B1BEC83930073C45D /* HXBaseController.m in Sources */,
+				F212EA7B1C24100A00BF4150 /* HXBaseQueue.m in Sources */,
 				F26EF3D91BEAE4290073C45D /* AppDelegate.m in Sources */,
 				F26EF4491BF179250073C45D /* HXBaseCharacteristicModel.m in Sources */,
 				F26EF4511BF19AF60073C45D /* HXWKLSearchDeviceAction.m in Sources */,
@@ -521,7 +568,8 @@
 				F26EF3D61BEAE4290073C45D /* main.m in Sources */,
 				F26EF3E21BEAE4290073C45D /* HXBluetoothSDK.xcdatamodeld in Sources */,
 				F2A636E91BF3217300859050 /* HXWKLBindDeviceAction.m in Sources */,
-				F2874A4D1BFDAB7500ACF1F1 /* HXBaseWorking.m in Sources */,
+				F208505D1C24F6C70055FFC9 /* HXBaseContainer.m in Sources */,
+				F2874A4D1BFDAB7500ACF1F1 /* HXBaseWorkingManager.m in Sources */,
 				F273CCAA1BFEB2A40088F499 /* HXWKLSleepAction.m in Sources */,
 				F29474D41C043BE50054CAC5 /* HXWKLTransparentTransmissionAction.mm in Sources */,
 			);
@@ -595,6 +643,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: xiong huang (LV7DNA2LCH)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -639,6 +688,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: xiong huang (LV7DNA2LCH)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -666,6 +716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/HXBluetoothSDK/HXBluetoothSDK.pch";
 				INFOPLIST_FILE = HXBluetoothSDK/Info.plist;
@@ -673,7 +724,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.new-life.HXBluetoothSDK";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "68ef2d38-0eda-466a-a800-c77c4fcbfb6a";
 			};
 			name = Debug;
 		};
@@ -683,6 +734,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/HXBluetoothSDK/HXBluetoothSDK.pch";
 				INFOPLIST_FILE = HXBluetoothSDK/Info.plist;
@@ -690,7 +742,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.new-life.HXBluetoothSDK";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "68ef2d38-0eda-466a-a800-c77c4fcbfb6a";
 			};
 			name = Release;
 		};

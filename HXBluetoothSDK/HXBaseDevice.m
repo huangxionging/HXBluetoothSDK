@@ -127,6 +127,10 @@ typedef void(^discoverCharacteristicTimerBlock)(NSError *error);
 
 #pragma mark---通过外设模型
 -(void)startWorkWith:(HXBasePeripheralModel *)peripheralModel{
+    
+    if (peripheralModel.state == kBasePeripheralStateError) {
+        
+    }
     // 设置外设
     self->_peripheral = peripheralModel.peripheral;
     // 设置外设代理
@@ -189,10 +193,8 @@ typedef void(^discoverCharacteristicTimerBlock)(NSError *error);
 #pragma mark---发送操作
 - (void)sendActionWithModel:(HXBaseActionDataModel *)actionDataModel {
     
-    
+    // 发送操作
     if (self.isChracteristicReady) {
-        // 发送操作
-        
         // 查找特征
         CBCharacteristic *characteristic = [self->_chracteristics objectForKey: actionDataModel.characteristicString.lowercaseString];
         if (characteristic && actionDataModel.actionData) {

@@ -214,8 +214,8 @@
             
             if (self->_finishedBlock) {
                 
-                NSString *string = _hexString->hexStringForData(_longPackageData);
-                self->_finishedBlock(YES, _hexString->hexStringForData(_longPackageData));
+               // NSString *string = _hexString->hexStringForData(_longPackageData);
+                self->_finishedBlock(_hexString->hexStringForData(_longPackageData));
             }
         }
         
@@ -437,8 +437,8 @@
         
         if (self->_finishedBlock) {
             
-            NSString *string = _hexString->hexStringForData(_longPackageData);
-            self->_finishedBlock(YES, _hexString->hexStringForData(_longPackageData));
+           // NSString *string = _hexString->hexStringForData(_longPackageData);
+            self->_finishedBlock( _hexString->hexStringForData(_longPackageData));
         }
         
         return;

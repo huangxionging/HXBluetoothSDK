@@ -314,9 +314,6 @@ Byte _shortPackage[120][17];
 #pragma mark---判断位域表
 - (BOOL) shortPackageFinished {
     
-    // 预先假设全部接收
-    BOOL flag = YES;
-    
     // 判断位域表是否全部为 0
     for (NSInteger index = 0; index < 15; ++index) {
         
@@ -432,7 +429,7 @@ Byte _shortPackage[120][17];
         [_sleepInfo setObject: @"YES" forKey: @"state"];
         [_sleepInfo setObject: @"1000" forKey: @"code"];
         [_sleepInfo setObject: _allSleepData forKey: @"data"];
-        self->_finishedBlock(YES, _sleepInfo);
+        self->_finishedBlock(_sleepInfo);
     }
     
     memset(_bitControlTable, 0xff, sizeof(Byte) * 15);

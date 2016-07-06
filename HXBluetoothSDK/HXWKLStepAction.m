@@ -439,7 +439,9 @@
         [_stepInfo setObject: @"YES" forKey: @"state"];
         [_stepInfo setObject: @"1000" forKey: @"code"];
         [_stepInfo setObject: _allStepData forKey: @"data"];
-        self->_finishedBlock(YES, _stepInfo);
+        self->_finishedBlock(_stepInfo);
+        
+        return;
     }
     
     memset(_bitControlTable, 0xff, sizeof(Byte) * 15);

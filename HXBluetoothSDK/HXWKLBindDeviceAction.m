@@ -82,11 +82,11 @@
         else if (updateDataModel.actionDatatype == kBaseActionDataTypeWriteAnswer){
             
             if (!updateDataModel.error && self.bindDeviceState == kWKLBindDeviceStateConfirm) {
-                self->_finishedBlock(YES, nil);
+                self->_finishedBlock(nil);
                 NSLog(@"写成功");
             }
             else {
-                self->_finishedBlock(NO, nil);
+                self->_finishedBlock(nil);
             }
         }
         

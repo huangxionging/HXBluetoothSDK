@@ -35,10 +35,10 @@
         Byte *bytes = (Byte *)[updateDataModel.actionData bytes];
         
         if (bytes[0] == 0x5b && bytes[1] == 0x0c && bytes[2] == 0x00 && bytes[3] == 0x05 && bytes[4] == 0x00) {
-            self->_finishedBlock(YES, nil);
+            self->_finishedBlock(nil);
         }
         else {
-            self->_finishedBlock(NO, nil);
+            self->_finishedBlock(nil);
         }
     }
     

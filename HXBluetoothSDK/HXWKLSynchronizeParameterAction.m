@@ -60,6 +60,12 @@
     return data;
 }
 
+- (NSSet *)keySetForAction {
+    return  [NSSet setWithObject: @"0x01"];
+}
+
+
+#pragma mark- 重写接受数据方法
 - (void)receiveUpdateData:(HXBaseActionDataModel *)updateDataModel {
     
     NSLog(@"%@", updateDataModel.actionData);

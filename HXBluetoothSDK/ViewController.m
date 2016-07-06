@@ -18,6 +18,7 @@
 #import "NSDate+HXUtilityTool.h"
 #import "HXWKLSleepAction.h"
 #import "HXWKLPayAction.h"
+#import "HXBaseWorkingManager.h"
 
 @interface ViewController ()<UITableViewDataSource, UITableViewDelegate> {
     HXWKLController *controller;
@@ -35,24 +36,26 @@
     
     [_indicatorView startAnimating];
        
-    controller = [[HXWKLController alloc] init];
+//    controller = [[HXWKLController alloc] init];
     
-    __weak UILabel *title = _titleString;
-    [controller setBlock:^(BOOL finished, BlockType type) {
-        if (finished == YES) {
-            if (type == kBlockTypeClient) {
-                title.text = @"正在绑定...";
-            }
-            else {
-                [_indicatorView stopAnimating];
-                _indicatorView.hidden = YES;
-                title.text = @"绑定成功...";
-            }
-        }
-    }];
+  //  __weak UILabel *title = _titleString;
+//    [controller setBlock:^(BOOL finished, BlockType type) {
+//        if (finished == YES) {
+//            if (type == kBlockTypeClient) {
+//                title.text = @"正在绑定...";
+//            }
+//            else {
+//                [_indicatorView stopAnimating];
+//                _indicatorView.hidden = YES;
+//                title.text = @"绑定成功...";
+//            }
+//        }
+//    }];
+//    
+//    [controller startWork];
+//
     
-    [controller startWork];
-    
+    [HXBaseWorkingManager managerWithConfiguresOfFile: @"HXWKLBluetooth"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,6 +64,8 @@
 }
 
 - (IBAction)resStart:(id)sender {
+    
+    
     
     [controller.baseClient cancelPeripheralConnection];
     _indicatorView.hidden = NO;
@@ -73,78 +78,25 @@
 
 - (IBAction)sendFindAction:(id)sender {
     
- //   [controller sendAction: [[HXWKLSearchDeviceAction alloc] init]];
-    [controller sendAction: [HXWKLSearchDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
+    [[HXBaseWorkingManager manager] post: @"bleto://actions/short_actions/synchronize_parameter?type=5" parameters: nil success:^(HXBaseAction *action, id responseObject) {
+
+    } failure:^(HXBaseAction *action, HXBaseError *error) {
         
-        if (finished == YES) {
-            NSLog(@"操作成功");
-        }
-        else {
-            NSLog(@"操作失败");
-        }
-    }]];
+    }];
     
 }
 
 - (IBAction)cancleBindDevice:(id)sender {
     
     _titleString.text = @"解除绑定成功...";
-    HXWKLBindDeviceAction *cancleBindDevice = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
-        if (finished == YES) {
-            NSLog(@"解除绑定成功");
-            
-        }
-        
-    }];
-    
-    cancleBindDevice.bindDeviceState = kWKLBindDeviceStateCancel;
-    
-    [controller sendAction: cancleBindDevice];
-    
-    [cancleBindDevice setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
 }
 
 - (IBAction)changeColor:(id)sender {
-    HXWKLChangeColorAction *changeColorAction = [HXWKLChangeColorAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
-        
-        if (finished == YES) {
-            NSLog(@"颜色成功");
-        }
-        
-    }];
-    
-   // changeColorAction.colorType = (unsigned int)arc4random() % 4;
-    
-    [controller sendAction: changeColorAction];
-    
-    [changeColorAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
-
+ 
 }
 
 - (IBAction)applyBindDevice:(id)sender {
     
-    
-    HXWKLBindDeviceAction *applyBindDevice = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
-        
-        if (finished == YES) {
-            NSLog(@"绑定成功");
-            [_indicatorView stopAnimating];
-            _indicatorView.hidden = YES;
-        }
-        
-    }];
-    
-    applyBindDevice.bindDeviceState = kWKLBindDeviceStateApply;
-    
-    [controller sendAction: applyBindDevice];
-    
-    [applyBindDevice setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
 }
 
 - (IBAction)synchronizeStep:(id)sender {
@@ -152,27 +104,6 @@
     _titleString.text = @"正在同步计步...";
     _indicatorView.hidden = NO;
     [_indicatorView startAnimating];
-    HXWKLStepAction *stepAction = [HXWKLStepAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
-        
-        _titleString.text = @"同步成功";
-        _indicatorView.hidden = YES;
-        [_indicatorView stopAnimating];
-        _dataSource = responseObject[@"data"];
-        [_tableView reloadData];
-    }];
-    
-    stepAction.stepActionType = kWKLStepActionTypeSynchronizeStepData;
-    stepAction.startDate = @"0";
-    stepAction.endDate = @"0";
-//    stepAction.startDate = @"2015/11/01";
-//    stepAction.endDate = @"2015/11/16";
-    
-    // 发送同步操作
-    [controller sendAction: stepAction];
-    
-    [stepAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
 }
 
 - (IBAction)preventLossSwitch:(id)sender {
@@ -183,31 +114,6 @@
 
 - (IBAction)synchronizeSleep:(id)sender {
     
-    _titleString.text = @"正在同步睡眠...";
-    _indicatorView.hidden = NO;
-    [_indicatorView startAnimating];
-    HXWKLSleepAction *sleepAction = [HXWKLSleepAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
-        
-        _titleString.text = @"同步成功";
-        _indicatorView.hidden = YES;
-        [_indicatorView stopAnimating];
-        _dataSource = responseObject[@"data"];
-        [_tableView reloadData];
-    }];
-    
- //   sleepAction.stepActionType = kWKLStepActionTypeSynchronizeStepData;
-    sleepAction.startDate = @"0";
-    sleepAction.endDate = @"0";
-    //    stepAction.startDate = @"2015/11/01";
-    //    stepAction.endDate = @"2015/11/16";
-    
-    // 发送同步操作
-    [controller sendAction: sleepAction];
-    
-    [sleepAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
-
 }
 
 - (IBAction)synchronizeParameter:(id)sender {
@@ -217,46 +123,10 @@
     [_indicatorView startAnimating];
     
     
-    
-    HXWKLSynchronizeParameterAction *synchronizeParam = [HXWKLSynchronizeParameterAction actionWithFinishedBlock:^(BOOL finished, id responseObject) {
-        
-        _titleString.text = @"同步成功";
-        _indicatorView.hidden = YES;
-        [_indicatorView stopAnimating];
-        
-    }];
-    synchronizeParam.time = [[NSDate date] stringForCurrentDateWithFormatString: @"yyyy/MM/dd HH:mm:ss"];
-    synchronizeParam.steps = 20000;
-    synchronizeParam.wearType = kWKLWearLocationTypeWrist;
-    synchronizeParam.sportType = kWKLSportTypeWalk;
-    synchronizeParam.isFirstSynchronize = YES;
-    synchronizeParam.protocolEditionNumber = 0;
-    synchronizeParam.genderType = kWKLGenderTypeMan;
-    synchronizeParam.age = 25;
-    synchronizeParam.weight = 75; // kg
-    synchronizeParam.bodyHeight = 173; // cm
-    // 功能
-    synchronizeParam.functionItem = 0x10100000;
-    
-    [controller sendAction: synchronizeParam];
-    
-    [synchronizeParam setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        
-    }];
 }
 
 - (IBAction)queryBalance:(id)sender {
-    HXWKLPayAction *payAction = [HXWKLPayAction actionWithFinishedBlock:^(BOOL finished, id response) {
-        
-    }];
-    payAction.payActionType = kWKLPayActionTypeQueryBalance;
     
-    
-    [controller sendAction: payAction];
-    
-    [payAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        [controller.baseDevice sendActionWithModel: answerDataModel];
-    }];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

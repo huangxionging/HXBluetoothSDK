@@ -7,7 +7,11 @@
 //
 
 #import "HXWKLController.h"
+#import "HXWKLSearchDeviceAction.h"
+#import "HXWKLBindDeviceAction.h"
+#import "HXBaseWorkingManager.h"
 
+#import <objc/message.h>
 
 @interface HXWKLController ()
 
@@ -47,12 +51,11 @@
  */
 @property (nonatomic, strong) NSString *writeCharacteristicUUIDString;
 
+@property (nonatomic, weak) NSDictionary *serviceDictionary;
+
 @property (nonatomic, strong) void(^block)(BOOL finished, BlockType type);
 
-/**
- *  操作字典, 回传数据根据操作字典进行投送
- */
-@property (nonatomic, strong) NSMutableDictionary<NSString *, HXBaseAction *> *actionSheet;
+
 
 @end
 
@@ -74,6 +77,8 @@
         
         NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile: path];
         
+        _serviceDictionary = [NSDictionary dictionaryWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"" ofType: @"plist"]];
+        
         self->_scanServiceUUIDs = dictionary[@"BraceletScanServices"];
         self->_discoverSeriveUUIDs = dictionary[@"BraceletDiscoveredServices"];
         self->_readChracteristicUUIDs = dictionary[@"BraceletReadCBCharacteristics"];
@@ -94,39 +99,14 @@
         if (self.baseDevice.isChracteristicReady == YES) {
             
             // 取消定时器
-            [self.baseDevice stopDiscoverCharacteristicTimer];
-            
+//            [self.baseDevice stopDiscoverCharacteristicTimer];
+            [self setUpdateDataBlock];
+            [self setWriteDataBlock];
             if (_block) {
                 _block(YES, kBlockTypeClient);
             }
             NSLog(@"已链接");
-            HXWKLBindDeviceAction *bindDeviceAction = [HXWKLBindDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
-
-                [self sendAction: [HXWKLSearchDeviceAction actionWithFinishedBlock:^(BOOL finished, NSDictionary<NSString *,id> *finisedInfo) {
-                    
-                    if (finished) {
-                        NSLog(@"绑定成功");
-                        
-                        if (_block) {
-                            _block(YES, kBlockTypeDevice);
-                        }
-                    }
-                }]];
-            }];
-            
-            // 查询绑定
-            bindDeviceAction.bindDeviceState = kWKLBindDeviceStateApply;
-            
-            // 回复绑定
-            [bindDeviceAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-                
-                answerDataModel.characteristicString = _writeCharacteristicUUIDString.lowercaseString;
-                [self.baseDevice sendActionWithModel: answerDataModel];
-            }];
-            
-            [self sendAction: bindDeviceAction];
         }
-        
     }
 }
 
@@ -159,6 +139,24 @@
     }
 }
 
+- (void) setUpdateDataBlock {
+    // 更新数据回调
+    [self.baseDevice setUpdateDataBlock:^(HXBaseActionDataModel *actionDataModel) {
+        
+//        [baseAction receiveUpdateData: actionDataModel];
+    }];
+}
+
+- (void) setWriteDataBlock {
+    // 写数据回调
+    [self.baseDevice setWriteDataBlock:^(HXBaseActionDataModel *actionDataModel) {
+//        [baseAction receiveUpdateData: actionDataModel];
+    }];
+}
+
+
+
+
 #pragma mark---控制器开始工作
 - (void)startWork {
     
@@ -166,7 +164,6 @@
     
     HXDEBUG;
     weakSelf.baseClient = [HXBaseClient shareBaseClient];
-    
     
     for (NSString *UUIDString in self->_scanServiceUUIDs) {
         [weakSelf.baseClient addPeripheralScanService: [CBUUID UUIDWithString: UUIDString.lowercaseString]];
@@ -263,7 +260,7 @@
         NSLog(@"%@", error);
         HXDEBUG;
         
-        // 说明外设查找失败, 这里为了方便才继续 souz
+        // 说明外设查找失败, 这里为了方便才继续
         [self.baseClient startScanPeripheralWithOptions: nil];
     }];
     
@@ -312,5 +309,6 @@
         
     }];
 }
+
 
 @end

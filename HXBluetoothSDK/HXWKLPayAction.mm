@@ -16,6 +16,7 @@
 typedef NS_ENUM(NSUInteger, WKLPayActionState) {
     kWKLPayActionStateNomal = 0,
     kWKLPayActionStateSelectedFile,
+    kWKLPayActionStateSelectedFileError,
     kWKLPayActionStateOpen,
 };
 
@@ -23,6 +24,10 @@ typedef NS_ENUM(NSUInteger, WKLPayActionState) {
     HXWKLTransparentTransmissionAction *_transparentAction;
     WKLPayActionState _state;
 }
+
+//+(instancetype)actionWithFinishedBlock:(void (^)(BOOL, id))finishedBlock {
+//    
+//}
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -58,18 +63,24 @@ typedef NS_ENUM(NSUInteger, WKLPayActionState) {
         }
             
         case kWKLPayActionTypeResetting: {
-            bytes[3] = 0x21;
+            bytes[3] = 0x20;
             break;
         }
             
         default:
             break;
     }
-
+    
+    if (_state == kWKLPayActionStateNomal) {
+        bytes[3] = 0x21;
+    } else if (_state == kWKLPayActionStateOpen) {
+        
+    }
     
     NSData *data = [NSData dataWithBytes: bytes length: 20];
     
     NSLog(@"数据:%@ ====> length: %@", data, @(data.length));
+    
     return data;
     
 }
@@ -88,64 +99,64 @@ typedef NS_ENUM(NSUInteger, WKLPayActionState) {
     }
     else if (bytes && bytes[0] == 0x5b && bytes[1] == 0x18 && bytes[3] == 0x20) {
         
-        _transparentAction  = [HXWKLTransparentTransmissionAction actionWithFinishedBlock:^(BOOL finished, id response) {
-            
-            if ([response isKindOfClass: [NSString class]]) {
-                
-                if ([response hasSuffix: @"9000"]) {
-                    
-                    
-                    if ([_transparentAction.content isEqualToString: @"0x00A40000023F00"]) {
-                        NSLog(@"读取文件成功");
-                        
-                        _transparentAction.keyWord = @"0x07";
-                        [self readFileWith: @"0x00A40000023F01"];
-                        
-                    } else if ([_transparentAction.content isEqualToString: @"0x00A40000023F01"]) {
-                        NSLog(@"读取文件成功");
-                        
-                        // 读取余额
-                        _transparentAction.keyWord = @"0x05";
-                        [self readFileWith:@"0x805C000204"];
-                        
-                    } else if ([_transparentAction.content isEqualToString: @"0x805C000204"]) {
-                        
-                        
-                        NSRange range = [response rangeOfString: @"9000"];
-                        
-                        NSString *string = [response substringToIndex:range.location];
-                        
-                        NSData *data = [self dataForString: string];
-                        
-                        Byte *bytes = (Byte *)[data bytes];
-                        
-                        NSInteger sum = 0;
-                        for (NSInteger index = 0; index < data.length; ++index) {
-                            sum += bytes[index] << ((data.length - index - 1) * 8);
-                        }
-                        NSLog(@"余额: === %@元", @(sum));
-                        
-                    }
-                }
-                
-                
-            
-            }
-        }];
-        
-        // 关键词
-        _transparentAction.keyWord = @"0x07";
-        [self readFileWith: @"0x00A40000023F00"];
-        
-        
-        
-        
+        [self openFile];
     }
     else if (bytes && bytes[0] == 0x5b && bytes[1] == 0x19 && bytes[3] == 0x20) {
         
     } else {
         [_transparentAction receiveUpdateData: updateDataModel];
     }
+}
+         
+- (void) openFile {
+//    _transparentAction  = [HXWKLTransparentTransmissionAction actionWithFinishedBlock:^(BOOL finished, id response) {
+//        
+//        if ([response isKindOfClass: [NSString class]]) {
+//            
+//            if ([response hasSuffix: @"9000"]) {
+//                
+//                
+//                if ([_transparentAction.content isEqualToString: @"0x00A40000023F00"]) {
+//                    NSLog(@"读取文件成功");
+//                    
+//                    _transparentAction.keyWord = @"0x07";
+//                    [self readFileWith: @"0x00A40000023F01"];
+//                    
+//                } else if ([_transparentAction.content isEqualToString: @"0x00A40000023F01"]) {
+//                    NSLog(@"读取文件成功");
+//                    
+//                    // 读取余额
+//                    _transparentAction.keyWord = @"0x05";
+//                    [self readFileWith:@"0x805C000204"];
+//                    
+//                } else if ([_transparentAction.content isEqualToString: @"0x805C000204"]) {
+//                    
+//                    
+//                    NSRange range = [response rangeOfString: @"9000"];
+//                    
+//                    NSString *string = [response substringToIndex:range.location];
+//                    
+//                    NSData *data = [self dataForString: string];
+//                    
+//                    Byte *bytes = (Byte *)[data bytes];
+//                    
+//                    NSInteger sum = 0;
+//                    for (NSInteger index = 0; index < data.length; ++index) {
+//                        sum += bytes[index] << ((data.length - index - 1) * 8);
+//                    }
+//                    NSLog(@"余额: === %@元", @(sum));
+//                    
+//                }
+//            }
+//            
+//            
+//            
+//        }
+//    }];
+//    
+    // 关键词
+    _transparentAction.keyWord = @"0x07";
+    [self readFileWith: @"0x00A40000023F00"];
 }
 
 - (void) closePayAction {
@@ -199,13 +210,13 @@ typedef NS_ENUM(NSUInteger, WKLPayActionState) {
     
     HXWKLPayAction *weakSelf = self;
     
-    [_transparentAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
-        
-        // 回传信息
-        if (weakSelf->_answerBlock) {
-            weakSelf->_answerBlock(answerDataModel);
-        }
-    }];
+//    [_transparentAction setAnswerActionDataBlock:^(HXBaseActionDataModel *answerDataModel) {
+//        
+//        // 回传信息
+//        if (weakSelf->_answerBlock) {
+//            weakSelf->_answerBlock(answerDataModel);
+//        }
+//    }];
 }
 
 // 假设 string 都是合理的 16进制字符串, 以0x 开头, 且长度是2的倍数
@@ -249,4 +260,8 @@ typedef NS_ENUM(NSUInteger, WKLPayActionState) {
     
 }
 
+
+- (void)dealloc {
+    NSLog(@"挂了....挂了");
+}
 @end

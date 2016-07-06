@@ -89,60 +89,60 @@
 - (NSDate *) firstDateOfCurrntMonth;
 
 /**
- *  @brief: 计算离现在日期相隔多少天的日期
- *  @param: numberDay 是整数表示与当前日期的间隔, 负数往前数, 正数往后数
- *  @return: 对应的日期
+ *  @brief 计算离现在日期相隔多少天的日期
+ *  @param numberDay 是整数表示与当前日期的间隔, 负数往前数, 正数往后数
+ *  @return 对应的日期
  */
 - (NSDate *) dateByAddingNumberDay: (NSInteger) numberDay;
 
 /**
- *  @brief: 将日期转换成相应格式的字符串
- *  @param: formatString 是格式字符串, 需遵循 NSDateFormatter 支持的格式
- *  @return: NSString 类型, 是格式化后的字符串
- *  @default: 默认格式 为 yyyyMMDD 例如 20150422
+ *  @brief  将日期转换成相应格式的字符串
+ *  @param  formatString 是格式字符串, 需遵循 NSDateFormatter 支持的格式
+ *  @return NSString 类型, 是格式化后的字符串
+ *  @default 默认格式 为 yyyyMMDD 例如 20150422
  */
 - (NSString *) stringForCurrentDateWithFormatString: (NSString *)formatString;
 
 /**
- *  @brief: 计算指定年月的第一天
- *  @param: month 是指定的月份, year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年月的第一天
+ *  @param  month 是指定的月份, year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) firstDateByMonth: (NSUInteger) month andByYear: (NSInteger) year;
 
 /**
- *  @brief: 计算指定年月的最后天
- *  @param: month 是指定的月份, year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年月的最后天
+ *  @param  month 是指定的月份, year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) lastDateByMonth: (NSUInteger) month andByYear: (NSInteger) year;
 
 /**
- *  @brief: 计算指定年份和季度的第一天
- *  @param:  quarter 是指定的季度, year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年份和季度的第一天
+ *  @param  quarter 是指定的季度, year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) firstDateByQuarter: (NSUInteger) quarter andByYear: (NSInteger) year;
 
 
 /**
- *  @brief: 计算指定年份季度的最后天
- *  @param: quarter 是指定的季度, year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年份季度的最后天
+ *  @param  quarter 是指定的季度, year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) lastDateByQuarter: (NSUInteger) quarter andByYear: (NSInteger) year;
 
 /**
- *  @brief: 计算指定年份的第一天
- *  @param:  year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年份的第一天
+ *  @param  year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) firstDateByYear: (NSInteger) year;
 
 /**
- *  @brief: 计算指定年份的最后一天
- *  @param:  year 是指定的年份
- *  @return:日期
+ *  @brief  计算指定年份的最后一天
+ *  @param  year 是指定的年份
+ *  @return 日期
  */
 + (NSDate *) lastDateByYear: (NSInteger) year;
 

@@ -7,8 +7,6 @@
 //
 
 #import "HXBaseController.h"
-#import "HXWKLSearchDeviceAction.h"
-#import "HXWKLBindDeviceAction.h"
 
 
 typedef NS_ENUM(NSUInteger, BlockType) {
@@ -17,16 +15,12 @@ typedef NS_ENUM(NSUInteger, BlockType) {
     
 };
 
-
 @interface HXWKLController : HXBaseController
 
-/**
- *  @brief  开始工作
- *  @param  void
- *  @return void
- */
+// 重写父类方法
 - (void) startWork;
 
+// 重写父类方法
 - (void) setBlock: (void(^)(BOOL finished, BlockType type)) block;
 
 

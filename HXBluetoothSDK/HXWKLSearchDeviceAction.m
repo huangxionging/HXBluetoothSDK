@@ -19,10 +19,10 @@
         // 表明查找成功
         if (!updateDataModel.error) {
             NSLog(@"查找成功");
-            self->_finishedBlock(YES, nil);
+            self->_finishedBlock(nil);
         }
         else {
-            self->_finishedBlock(NO, nil);
+            self->_finishedBlock(nil);
         }
     }
 }

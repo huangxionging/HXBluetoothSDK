@@ -26,6 +26,8 @@ StringToHex::StringToHex () {
 }
 
 StringToHex::~StringToHex() {
+    HXDEBUG;
+    NSLog(@"挂了....挂了");
     free(&hex_map);
 }
 
@@ -83,5 +85,6 @@ NSString *StringToHex::hexStringForData(NSData *data) {
     
     return mutableString;
 }
+
 
 

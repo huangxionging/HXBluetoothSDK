@@ -6,9 +6,9 @@
 //  Copyright © 2015年 huangxiong. All rights reserved.
 //
 
-#import "HXWKLWorking.h"
+#import "HXWKLWorkingManager.h"
 
-@implementation HXWKLWorking
+@implementation HXWKLWorkingManager
 
 - (void)get:(NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, NSError *))failure {
     
@@ -22,8 +22,5 @@
     
 }
 
-- (void)post:(NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, NSError *))failure {
-    
-}
 
 @end

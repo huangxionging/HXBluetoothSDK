@@ -18,41 +18,57 @@
 @implementation HXBaseAction
 
 
-+ (instancetype)actionWithFinishedBlock:(void (^)(BOOL, id responseObject))finishedBlock {
-    HXBaseAction *action = [[super alloc] init];
++ (instancetype)actionWith:(id)parameter andAnswerActionDataBlock:(void (^)(HXBaseActionDataModel *))answerActionBlock andFinishedBlock:(void (^)(id))finishedBlock{
     
-    if (action) {
-        action->_finishedBlock = finishedBlock;
-        
-        // 类名
-        action->_acionName = [NSString stringWithUTF8String: object_getClassName(self)];
-        
-        // 默认命令长度
-        action->_actionLength = 20;
-        
-        // 监听完成对象
-    //    [action addObserver: action forKeyPath: @"finished" options:NSKeyValueObservingOptionNew context: nil];
-    }
+    HXBaseAction *action = [[super alloc] initWithParameter: parameter answer: answerActionBlock finished: finishedBlock];
     
     return action;
 }
 
+- (NSArray *)registerKeysForAction {
+    if ([[self class] isSubclassOfClass: [HXBaseAction class]]) {
+        NSLog(@"请在子类实现");
+        HXDEBUG;
+        NSParameterAssert(0);
+    }
+    return nil;
+}
+
 - (NSData *)actionData {
+    if ([[self class] isSubclassOfClass: [HXBaseAction class]]) {
+        NSLog(@"请在子类实现");
+        HXDEBUG;
+        NSParameterAssert(0);
+    }
     return [[NSData alloc] init];
 }
 
 - (void)receiveUpdateData:(HXBaseActionDataModel *)updateDataModel {
     
+    if ([[self class] isSubclassOfClass: [HXBaseAction class]]) {
+        NSLog(@"请在子类实现");
+        HXDEBUG;
+        NSParameterAssert(0);
+    }
 }
 
 - (void)setAnswerActionDataBlock:(void (^)(HXBaseActionDataModel *))answerActionBlock {
     self->_answerBlock = answerActionBlock;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString: @"finished"]) {
-        self.finished;
+#pragma mark- 初始化 action
+- (instancetype)initWithParameter:(id)parameter answer:(void (^)(HXBaseActionDataModel *))answerBlock finished:(void (^)(id))finishedBlock {
+    if (self = [super init]) {
+        self->_answerBlock = answerBlock;
+        self->_finishedBlock = finishedBlock;
+        
+        // 类名
+        self->_acionName = [NSString stringWithUTF8String: object_getClassName(self)];
+        
+        // 默认命令长度
+        self->_actionLength = 20;
     }
+    return self;
 }
 
 @end

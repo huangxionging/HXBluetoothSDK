@@ -6,9 +6,9 @@
 //  Copyright © 2015年 huangxiong. All rights reserved.
 //
 
-#import "HXBaseWorking.h"
+#import "HXBaseWorkingManager.h"
 
-@interface HXWKLWorking : HXBaseWorking
+@interface HXWKLWorkingManager : HXBaseWorkingManager
 
 - (void)get:(NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, NSError *))failure;
 

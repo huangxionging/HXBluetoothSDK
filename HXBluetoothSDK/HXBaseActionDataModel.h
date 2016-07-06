@@ -61,6 +61,15 @@ typedef NS_ENUM(NSUInteger, BaseActionDataType){
 @property (nonatomic, assign) CBCharacteristicWriteType writeType;
 
 /**
+ *  关键字
+ */
+@property (nonatomic, copy) NSString *keyword;
+
+/**
+ *
+ */
+
+/**
  *  发送命令时使用
  */
 + (instancetype) modelWithAction: (HXBaseAction *)action;
