@@ -120,7 +120,6 @@
         default:
             break;
     }
-    
     return [NSData dataWithBytes: bytes length: 20];
 }
 

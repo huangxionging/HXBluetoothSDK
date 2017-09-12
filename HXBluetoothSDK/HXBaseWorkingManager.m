@@ -196,7 +196,6 @@ static HXBaseWorkingManager *baseWorkingManager = nil;
 #pragma mark---处理参数
 - (void ) handleURLString: (NSString *)URLString parameters:(id)parameters success:(void (^)(HXBaseAction *, id))success failure:(void (^)(HXBaseAction *, HXBaseError *))failure {
     
-    
     NSMutableDictionary *allParameters = [NSMutableDictionary dictionaryWithCapacity: 4];
     
     HXBaseError *error = nil;
@@ -253,7 +252,6 @@ static HXBaseWorkingManager *baseWorkingManager = nil;
     
     if (workingAction) {
         // 异步调用
-       
         dispatch_async(dispatch_get_main_queue(), ^{
             // 处理参数和回调数据
             [self->_controller sendAction: workingAction parameters: allParameters success: success failure: failure];

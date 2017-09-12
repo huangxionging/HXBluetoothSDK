@@ -724,7 +724,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.new-life.HXBluetoothSDK";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "68ef2d38-0eda-466a-a800-c77c4fcbfb6a";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -742,7 +742,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.new-life.HXBluetoothSDK";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "68ef2d38-0eda-466a-a800-c77c4fcbfb6a";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

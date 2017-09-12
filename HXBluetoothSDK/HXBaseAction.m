@@ -17,7 +17,6 @@
 
 @implementation HXBaseAction
 
-
 + (instancetype)actionWith:(id)parameter andAnswerActionDataBlock:(void (^)(HXBaseActionDataModel *))answerActionBlock andFinishedBlock:(void (^)(id))finishedBlock{
     
     HXBaseAction *action = [[super alloc] initWithParameter: parameter answer: answerActionBlock finished: finishedBlock];

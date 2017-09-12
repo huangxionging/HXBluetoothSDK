@@ -106,7 +106,6 @@
         else {
             NSLog(@"断开链接");
             [weakSelf.baseClient connectPeripheralWithOptions: nil];
-            
         }
         
     }];

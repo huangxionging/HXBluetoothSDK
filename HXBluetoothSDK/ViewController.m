@@ -66,7 +66,6 @@
 - (IBAction)resStart:(id)sender {
     
     
-    
     [controller.baseClient cancelPeripheralConnection];
     _indicatorView.hidden = NO;
     [_indicatorView startAnimating];
@@ -78,7 +77,7 @@
 
 - (IBAction)sendFindAction:(id)sender {
     
-    [[HXBaseWorkingManager manager] post: @"bleto://actions/short_actions/synchronize_parameter?type=5" parameters: nil success:^(HXBaseAction *action, id responseObject) {
+    [[HXBaseWorkingManager manager] post: @"bleto://actions/short_actions/search_device" parameters: nil success:^(HXBaseAction *action, id responseObject) {
 
     } failure:^(HXBaseAction *action, HXBaseError *error) {
         
